@@ -23,6 +23,7 @@
 \usepackage{mdwlist}
 \usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
+\usepackage{xcolor}
 \renewcommand{\headrulewidth}{0pt}
 \newcommand{\ti}{Robust Nonintrusive Conservative Limiting for Legacy Codes}
 %\newcommand{\piname}{\textcolor{red}{CUI Page Markings. (DELETE or COMMENT OUT if not applicable.)}}
@@ -56,8 +57,10 @@
 %            pdfauthor=\auth}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
+\newcommand{\nb}[3]{%
+  {\colorbox{#2}{\bfseries\scriptsize\textcolor{white}{#1}}}%
+  {\textcolor{#2}{\textit{#3}}}}
+\newcommand{\ST}[1]{\nb{ST}{violet}{#1}}
 
 
 
@@ -79,6 +82,10 @@
 
 \textbf{Funding level (\$K):} \$150K.
 \vspace*{\baselineskip}
+
+\ST{Suggestion: avoid "LANL legacy codes", use "LANL programmatic codes" instead}
+
+\ST{TBD: identify LANL code for testing (Quinoa and xRAGE?)}
 
 \textbf{Project Description:}
 
