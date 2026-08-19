@@ -1,8 +1,8 @@
 %%%     Package List and Document Class     %%%%
 \documentclass[12pt,twoside]{paper}
-\usepackage[numbers,sort&compress]{natbib}
 \usepackage{graphics}
 \usepackage{graphicx}
+\usepackage{xspace}
 \usepackage{makeidx}
 \usepackage{amsfonts}
 \usepackage{amsmath}
@@ -11,7 +11,9 @@
 \usepackage[colorlinks,breaklinks]{hyperref}
 \usepackage{hyperref}
 \usepackage{color}
-\usepackage{hypernat}
+\usepackage[numbers,sort&compress]{natbib}
+\let\cite=\citet
+%\usepackage{hypernat}
 \usepackage{subfig}
 \usepackage{pslatex}
 \usepackage{soul}
@@ -23,8 +25,11 @@
 \usepackage{mdwlist}
 \usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
+\usepackage{bbm}
+
+
 \renewcommand{\headrulewidth}{0pt}
-\newcommand{\ti}{Robust Nonintrusive Conservative Limiting for Legacy Codes}
+\newcommand{\ti}{Robust Nonintrusive Conservative Limiting for Production Codes}
 %\newcommand{\piname}{\textcolor{red}{CUI Page Markings. (DELETE or COMMENT OUT if not applicable.)}}
 \newcommand{\pinamee}{PI Name (Tokareva, Svtelana)}
 \setlength{\headheight}{12pt}
@@ -57,10 +62,23 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%    JLG's macros                        %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand{\ie}{i.e.,\@\xspace}
+\newcommand{\eqq}{{:=}}
+\def\Real{{\mathbb R}}
+\newcommand{\bu}{\textbf{u}}
+\newcommand{\bv}{\textbf{v}}
+\newcommand\bsfu{\textsf{\textbf u}}
+\newcommand\bsfv{\textsf{\textbf v}}
 
-
-
+\newcommand{\calA}{{\mathcal A}}
+\newcommand{\calI}{{\mathcal I}}
+\newcommand{\calL}{{\mathcal L}}
+\newcommand{\calT}{{\mathcal T}}
+\newcommand{\calV}{{\mathcal V}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%     FEASIBILITY STUDY COVERPAGE     %%%%
@@ -69,7 +87,7 @@
 \begin{center}
     \large \textbf{Feasibility Study (FS)}\\
     \vspace{0.5cm}
-    \normalsize \textbf{Robust Nonintrusive Conservative Limiting for Legacy Codes}\\
+    \normalsize \textbf{Robust Nonintrusive Conservative Limiting for Production Codes}\\
     Tokareva, Svetlana; T5; tokareva@lanl.gov
 \end{center}
 \vspace*{\baselineskip}
@@ -80,7 +98,9 @@
 \textbf{Funding level (\$K):} \$150K.
 \vspace*{\baselineskip}
 
-\textbf{Project Description:}
+\textbf{Project Description:} \textcolor{red}{250 words}
+
+\vspace*{0.5\baselineskip}
 
 Sampling and exploring large parameter spaces using LANL's production
 codes often fails due to robustness issues. Machine learning
@@ -89,30 +109,31 @@ require numerous simulations to learn the functional dependence on
 input parameters.  The failure probabibilty is high when the
 models/approximation techniques involve various time/space scales,
 multi-rate time stepping, adaptive multi-resolution, and/or mix
-approximation paradigms. We posit that ensuring that every piece of
-the computational chain maintains physical bounds is the key to
-achieving robustness.
+approximation paradigms. We posit that robustness can be achieved by ensuring that every piece of
+the computational chain maintains physical bounds.
+\vspace*{0.5\baselineskip}
 
 One key tool to maintain physical bounds is limiting, but most known
 limiting techniques are specialized and intrusive.  They mostly
 consist of limiting slopes or fluxes, and are all somewhat based on
-the flux-corrected transport paradigm of Boris–Book (1973) and Zalesak
-(1979) by which a “non-admissible” but accurate high-order solution is
-squeezed in the direction of a “good” low-order solution until it is
-meets the requires bounds.  The squeezing idea is powerful,
-but this paradigm has four major defects: (i)
-It is intrusive: i.e., it requires manipulating slopes and fluxes
-which is impossible to do in LANL's legacy codes without engaging in costly
-and error-prone restructuration; (ii) It fails when the high-order and
-low-order solutions do not carry the same “generalized” mass; (iii) It
-cannot be applied to modal approximation techniques and reduced-order
-models; (iv)  It fails for heterogeneous
-time/space approximations.
+the flux-corrected transport paradigm of
+\cite{Boris_Book_JCP_1973} and
+\cite{Zalesak_1979} by which a “non-admissible” but accurate
+high-order solution is squeezed in the direction of a “good” low-order
+solution until it meets required bounds.  The squeezing idea is
+powerful, but has four major defects: (i) It is intrusive: i.e., it
+requires manipulating slopes and fluxes which is impossible to do in
+LANL's production codes without engaging in costly and error-prone
+restructuration; (ii) It fails when the high-order and low-order
+solutions do not carry the same “generalized” mass; (iii) It cannot be
+applied to modal approximation techniques and reduced-order models;
+(iv) It fails for heterogeneous time/space approximations.
+\vspace*{0.5\baselineskip}
 
 The goal of this FS is to develop generic limiting techniques that are
-robust, efficient, HPC portable, and potentially easy to implement in
-LANL's legacy codes.
-
+not affected by the above problems and that are robust, efficient, HPC
+portable, and potentially easy to implement in LANL's production
+codes.
 
 \vspace*{\baselineskip}
 
@@ -124,7 +145,7 @@ LANL's legacy codes.
 \pagebreak
 
 \textbf{Problem, Hypothesis \& Technical Rationale:}
-\vspace*{\baselineskip}
+\vspace*{0.5\baselineskip}
 
 \textit{Why:} Accurate quantitative predictions of coupled multiphysics  systems
 are at the center of LANL's mission and many innovative applications like
@@ -139,15 +160,17 @@ problems involving multiple time and length scales \textbf{still poses}
 robustness challenges both for direct and inverse
 methods.
 
-Although the machine learning revolution promises to solve some of
+\vspace*{0.5\baselineskip}
+
+\textit{Why now:} Although the machine learning revolution promises to solve some of
 these problems, data sampling is a major bottleneck due to \textbf{lack of
 robustness} for many sample-driven computational approaches such as
 surrogate-based optimization, Bayesian inverse problems, and
-uncertainty quantification.  Machine learning requires running legacy
-codes a large number of times in order to learn the functional
+uncertainty quantification.  Machine learning requires running production
+codes many times in order to learn the functional
 dependence with respect to input parameters. But sampling large
 parameter spaces via thousands of automated runs of complex
-multiphysics legacy codes using traditional approximation methods is
+multiphysics codes using traditional approximation methods is
 hindered by the fact that a significant number of simulations never
 reach completion due to robusness issues, thereby undermining the
 promises of the machine learning revolution.  There is therefore an
@@ -155,48 +178,50 @@ promises of the machine learning revolution.  There is therefore an
 robust numerical methods that can reliably solve multiphysics
 applications using heterogeneous approximation techniques.
 
-\vspace*{\baselineskip}
+\vspace*{0.5\baselineskip}
 
 \textit{What:} We posit that a key to achieving robustness when leveraging
 heterogeneous approximation techniques is to ensure that every piece
-of the computational chain is maintains physical bounds (i.e. is
+of the computational chain maintains physical bounds (\ie is
 invariant-domain preserving (IDP)).
 The objective of this FS is to
 address the robustness issue induced by the violation of physical
 bounds in the context of heterogeneous approximation techniques.
 In this FS we will develop generic limiting techniques that are
 robust, efficient, HPC portable, and potentially easy to implement in
-LANL's legacy codes.
+LANL's production codes.
 
-\vspace*{\baselineskip}
+\vspace*{0.5\baselineskip}
 
 \textit{How:} Enforcing physical bounds is usualy done in the
-litearture by limiting slopes or fluxes. Most limiting methods cosnist
+literature by limiting slopes or fluxes. Most limiting methods consist
 of squeezing some accurate (but fragile) approximation towards a
 robust (but inaccurate) approximation until some physical bounds are
 met. This powerful methodology is unfortunately highly intrusive as it
-needs to access and manipulate fluxes and blend high-orderr and
+needs to access and manipulate fluxes and blend high-order and
 low-order fluxes. The intrusiveness renders this methodology
-unapplicable for LANL's legacy codes. It is also extremly curbesome
-when deployed on multiphysics problems are the fluxes in this cases
-may not be easily indentified.
-
-The key idea that we will deploy in the context of this FS is based on
-a algorithm recently proposed by
-J.L. Guermond\footnote{J.-L. Guermond,
-\url{https://arxiv.org/abs/2606.22839}}.  The method is essentially a
-post-processing conservative technique informed of the physics with
-some a priori reasonable mathematical knowledge of the bounds that are
-expected.  The input for the proposed methods will be a list of
-(physical) states a of user-defined concave functionals encoding some
-a priori mathematical knowledge on the local bounds tha must be
-enforced. The main idea is to locally take from the states that are in
-bounds and give to the states that are out of bounds while maintaining
-local conservation. The idea sounds simple, but the two main
-difficulties that make it non-trivial are that the states and the
-budgets are vector-valued and the bounds are often nonliear. The
-method has already been demonstrated to be efficient and versatile,
-and it is indeed non-intrusive.
+inapplicable for LANL's codes. It is also extremely cumbersome when
+deployed on multiphysics problems as the fluxes in this cases may not
+be easily identified, especially when they are estimated in a
+matrix-free fashion, which is now the accepted standard at LANL for
+GPUs accelerated simulations.
+%
+The new idea to be deployed in the context of this FS is based on an
+algorithm recently proposed by \cite{Guermond_arxiv_2026} and based on
+\cite[\S2.3]{Kucharik_Shashkov_Wendroff_JCP_2003} and
+\citet{Liu_Cheng_Shu_JSC_2017,Griffin_Shu_RMathSci_2026}. This is a
+post-processing method informed of the physics through some a priori
+reasonable mathematical knowledge of the bounds that are expected.
+The input for the proposed methods is a list of (physically relevant) states,
+and a user-defined concave functional encoding some a priori
+mathematical knowledge on the local bounds that must be enforced. The
+main idea is to locally take from the states that are in bounds and
+give to the states that are out of bounds while maintaining local
+conservation. The idea sounds simple, but the two main difficulties
+that make it non-trivial are that the states and the budgets are
+vector-valued and the bounds are nonlinear. The method has
+already been demonstrated to be efficient and versatile, and it is
+indeed non-intrusive.
 
 
 
@@ -236,14 +261,29 @@ and it is indeed non-intrusive.
 
 \textbf{Mission Impact \& Institutional Agility:}
 
+\vspace*{0.5\baselineskip}
+
+The present project aligns with the LANL “Computational \& AI Breakthrough” Lab Agenda by
+advancing research in two critical areas: “(1) Algorithmic and Numerical Method Development;
+(2) Software Design and Implementation, focusing on creating high-quality software that
+efficiently supports our developed methods.”
+
+\vspace*{0.5\baselineskip}
 
 Progress in numerical techniques is crucial for enhancing LANL's
-simulation capabilities. Specifically, developing robust forward simulations
+simulation capabilities. The new non-intrusive and
+approximation-agnostic techniques that will be developed in this proposal have the potential to
+unlock the capabilities of existing LANL production codes.
+Enhancing the robustness of forward
+and reduced-order simulations, will dramatically increase the reliability of automated runs over
+large parameter sets, and will help tackle complex multiphysics simulations with greater
+confidence. 
+Specifically, developing robust forward simulations
 that maintain physical states across various multiphysics scenarios will strengthen 
 LANL's ability to leverage more efficientlty machine learning and AI tools. 
 
 
-
+\vspace*{0.5\baselineskip}
 
 
 \textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{1}{2}$ page)}}\\
@@ -268,24 +308,71 @@ LANL's ability to leverage more efficientlty machine learning and AI tools.
 
 \textbf{Approach, Resources \& Path Forward:}
 
-Ths project will involve the PI (svetlana Tokareva) and two co-PIs who each hold Joint
-appointments (JT) with LANL and are  professors of Mathematics at Texas A\&M
+\vspace*{0.5\baselineskip}
+
+\textit{How:} To some extent, the proposed methodology will be agnostic to
+the problem and discretization at hand. It will consist of a
+post-processing algorithm that, if needed, will slightly reorganize the
+inputs in a conservative way so that the output satisfies pre-assigned
+physical bounds. The input will be a list of physical states (\ie
+$\Real^m$-valued state vectors where $m$ is the dimension of the state
+variables) say $(\bsfu_i)_{i\in\calV}$, a user-defined quasi-concave
+(or simply concave) functional $\Psi$ encoding some a priori
+mathematical knowledge on the physical bounds to be enforced, a
+list of minimum bounds say $(\Psi_i^{\min})_{i\in\calV}$ to be
+enforced. To fully formulate the problem we assume to be given a list
+of local masses $(m_i)_{i\in\calV}$ (scaling like volumes). With
+$I\eqq \text{card}(\calV)$, the objective is to construct a mapping
+$\calL : (\Real^m)^I \to (\Real^m)^I$ so that $\Psi(\calL(\bsfu)_i)\ge
+\Psi_m^{\min}$ for all $i\in\calV$. This must be done while being
+conservative, meaning $\sum_{i\in\calV} m_i\calL(\bsfu)_i =
+\sum_{i\in\calV} m_i\bsfu_i$. The principles of the method are
+described in \citep{Guermond_arxiv_2026}.
+
+\vspace*{0.5\baselineskip}
+
+\textit{Deliverable:} The deliverable will be a standalone software
+written in a modern object-oriented language (C++ or F2023).
+
+
+\vspace*{0.5\baselineskip}
+
+\textit{Who:} The project will involve the PI (svetlana Tokareva) and two co-PIs who each hold a Joint
+appointment (JT) with LANL since August 2025 and are  Professor of Mathematics at Texas A\&M
 University (Jean-Luc Guermond and Matthias Maier). Both J.L. Guermond
-and M. Maier are US citizen.
+and M. Maier are US citizens and have been collaborating with LANL for some time.
+\textcolor{red}{Students?}
 
-The budget asked for the excecution of the project will divided as
-follows: (1) two one-week visits at Texas A\&M by the PI; two one-week
-visits at LANL by the two co-PIs during Spring 2027 (two weeks each);
-One long visit during the summer (five to six weeks for each
-co-PI).
+\vspace*{0.5\baselineskip}
 
-The PI and co-PI are going to focus on the theoretical aspects
-of the project in the Fall of 2026 and identify a prototype production
-code that will be used to demosntrate the feasability of the proposed
-approach. Sping 2027 will be dedicated to testing the theoretical ideas
-from demonstrating 
+\textit{How much:} The budget asked for the excecution of the project
+will divided as follows: (1) two one-week visits at Texas A\&M by the
+PI; two one-week visits at LANL by the two co-PIs during Spring 2027
+(travel and accommodation support for two weeks each, making it four
+weeks in total); One long visit during the summer. This will be five
+to six weeks for each co-PI, making it ten to twelve weeks of support
+in total (travel plus accommodation).  The two co-PIs will also have one
+month of salary each supported by the grant.
 
+\vspace*{0.5\baselineskip}
 
+\textit{When:} The PI and co-PI are going to focus on the theoretical
+aspects of the project in the Fall of 2026 and identify a LANL
+prototype production code that will be used to demonstrate the
+feasibility of the proposed approach. Sping 2027 will be dedicated to
+testing the theoretical ideas from \citep{Guermond_arxiv_2026} and
+demonstrating that the proposed strategy can indeed be
+applied non-intrusively on testbed codes developed by the PIs. This
+period of tests and verification will likely lead to extensions and adaptations of the
+paradigm.  By the end of Spring 2027, the project will be ready for
+real tests on the predefined LANL prototype production code. Summer 2027 will be
+entirely focused on the project. The three PIs will all meet at Los Alamos and finalize the project.  A publication documenting the
+theoretical aspects and the validation tests for this project will be
+prepared.
+
+\textit{Metric:} Success will be measured by demonstrating that the
+proposed methodology is successful when combined with the predefined
+LANL prototype production code.
 
 
 
@@ -341,31 +428,46 @@ from demonstrating
 %%%%%%%%%%%%%%%%% APPENDICES  %%%%%%%%%%%%%%%%%%
 \vspace*{\baselineskip}
 
-\textbf{Appendix:} \textcolor{red}{These sections are not page limited.}
+\textbf{Appendix:} NA
+%\textcolor{red}{These sections are not page limited.}
 \vspace*{\baselineskip}
 
-\textbf{AI Disclosure statement:} \textcolor{red}{\textbf{Substantive contributions by AI must be disclosed.} \\
-\textcolor{red}{See \underline{CEA's} "Minimal Use vs. Substantive Use” and "Disclosure Library" resources.}}
+\textbf{AI Disclosure statement:} NA
+%\textcolor{red}{\textbf{Substantive contributions by AI must be disclosed.} \\
+%\textcolor{red}{See \underline{CEA's} "Minimal Use vs. Substantive Use” and "Disclosure Library" resources.}}
 \vspace*{\baselineskip}
 
-\textbf{Glossary of Acronyms:} \textcolor{red}{\textbf{Include a list of acronyms (with definitions) used in the proposal.}}
+\textbf{Glossary of Acronyms:}
+
+FCT: Flux corrected transport
+
+IDP: Invariant-Domain preserving
+
+GPU: Graphics Processing Unit
+
+JT: Joint appointment
+
+ICF: Inertial confinement fusion
+
+%\textcolor{red}{\textbf{Include a list of acronyms (with definitions) used in the proposal.}}
 \vspace*{\baselineskip}
 
 %%%%%%%%%%%%%%%%% REFERENCES  %%%%%%%%%%%%%%%%%%
 % If submitting a Concept Disruptor, copy this section starting from \renewcommand and ending in \vspace*{\baselineskip} and paste it into your Concept Disruptor template where indicated (look for commented-out References section. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\renewcommand{\bibpreamble}{[1.] This is an example reference. NOTE: If you are a LaTeX user, the list should automatically populate when you type ``$\backslash$cite$\{$insert name of .bib reference$\}$" within the BODY of your proposal.}
-\bibliographystyle{abbrv}
-\bibliography{LDRD_IR_BIB_template}
-\textcolor{red}{\textit{(\textbf{Optional.} While not page limited, strongly recommend to not exceed 1 page)}}
-\vspace*{\baselineskip}
+%\renewcommand{\bibpreamble}{[1.] This is an example reference. NOTE: If you are a LaTeX user, the list should automatically populate when you type ``$\backslash$cite$\{$insert name of .bib reference$\}$" within the BODY of your proposal.}
+\bibliographystyle{abbrvnat}
+\bibliography{LDRD_IR_JLG_MM_ST}
 
-\textcolor{red}{This page is for references only. DO NOT include comments, notes, etc.  References should not contain images/figures.  Additional content included in the references that are deemed to be proposal-like (e.g. language such as but not limited to “we,” “this proposal,” “our competition”) may provide a substantive advantage and will result in the rejection of the proposal without technical review. Again, be judicious in your citation selection.}
-\vspace*{\baselineskip}
+%\textcolor{red}{\textit{(\textbf{Optional.} While not page limited, strongly recommend to not exceed 1 page)}}
+%\vspace*{\baselineskip}
 
-\textcolor{red}{Do not include any letters of reference or recommendation in your proposal. They will be discarded without consideration.}
-\vspace*{\baselineskip}
+%\textcolor{red}{This page is for references only. DO NOT include comments, notes, etc.  References should not contain images/figures.  Additional content included in the references that are deemed to be proposal-like (e.g. language such as but not limited to “we,” “this proposal,” “our competition”) may provide a substantive advantage and will result in the rejection of the proposal without technical review. Again, be judicious in your citation selection.}
+%\vspace*{\baselineskip}
+
+%\textcolor{red}{Do not include any letters of reference or recommendation in your proposal. They will be discarded without consideration.}
+%\vspace*{\baselineskip}
 
 \newpage
 
