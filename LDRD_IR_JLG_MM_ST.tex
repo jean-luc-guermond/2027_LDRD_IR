@@ -1,0 +1,1067 @@
+%%%     Package List and Document Class     %%%%
+\documentclass[12pt,twoside]{paper}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{graphics}
+\usepackage{graphicx}
+\usepackage{makeidx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{enumerate}
+\usepackage{enumitem}
+\usepackage[colorlinks,breaklinks]{hyperref}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{hypernat}
+\usepackage{subfig}
+\usepackage{pslatex}
+\usepackage{soul}
+\usepackage{fancyhdr}
+\newcommand{\forceindent}{\leavevmode{\parindent=1em\indent}}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage[compact]{titlesec}
+\usepackage{mdwlist}
+\usepackage[margin=1in]{geometry}
+\usepackage{amssymb}
+\renewcommand{\headrulewidth}{0pt}
+\newcommand{\ti}{Robust Nonintrusive Conservative Limiting for Legacy Codes}
+%\newcommand{\piname}{\textcolor{red}{CUI Page Markings. (DELETE or COMMENT OUT if not applicable.)}}
+\newcommand{\pinamee}{PI Name (Tokareva, Svtelana)}
+\setlength{\headheight}{12pt}
+\pagestyle{fancyplain}
+\fancyhf{}
+\lhead{\fancyplain{}{\scriptsize \ti}}
+\rhead{\fancyplain{}{\scriptsize Proposal Number (obtained from the Q system)}}
+%\chead{\fancyplain{}{\scriptsize \textcolor{red}{CUI Page Markings (if applicable)}}}
+\lfoot{\fancyplain{}{\scriptsize \pinamee}}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\setcounter{page}{1}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{0em}
+\raggedright
+\raggedbottom
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%     Graphics Path     %%%%
+\graphicspath{{./fig/}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%%%    Hyperlink Setup     %%%%
+\hypersetup{citecolor=blue,
+            linkcolor=blue,
+            urlcolor=blue,
+            pdftitle=ti}
+%            pdfauthor=\auth}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     FEASIBILITY STUDY COVERPAGE     %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    \large \textbf{Feasibility Study (FS)}\\
+    \vspace{0.5cm}
+    \normalsize \textbf{Robust Nonintrusive Conservative Limiting for Legacy Codes}\\
+    Tokareva, Svetlana; T5; tokareva@lanl.gov
+\end{center}
+\vspace*{\baselineskip}
+
+\textbf{Duration (mo):} 12 months.
+\vspace*{\baselineskip}
+
+\textbf{Funding level (\$K):} \$150K.
+\vspace*{\baselineskip}
+
+\textbf{Project Description:}
+
+Sampling and exploring large parameter spaces using LANL's production
+codes often fails due to robustness issues. Machine learning
+techniques are significantly affected by the robustness issue as they
+require numerous simulations to learn the functional dependence on
+input parameters.  The failure probabibilty is high when the
+models/approximation techniques involve various time/space scales,
+multi-rate time stepping, adaptive multi-resolution, and/or mix
+approximation paradigms. We posit that ensuring that every piece of
+the computational chain maintains physical bounds is the key to
+achieving robustness.
+
+One key tool to maintain physical bounds is limiting, but most known
+limiting techniques are specialized and intrusive.  They mostly
+consist of limiting slopes or fluxes, and are all somewhat based on
+the flux-corrected transport paradigm of Boris–Book (1973) and Zalesak
+(1979) by which a “non-admissible” but accurate high-order solution is
+squeezed in the direction of a “good” low-order solution until it is
+meets the requires bounds.  The squeezing idea is powerful,
+but this paradigm has four major defects: (i)
+It is intrusive: i.e., it requires manipulating slopes and fluxes
+which is impossible to do in LANL's legacy codes without engaging in costly
+and error-prone restructuration; (ii) It fails when the high-order and
+low-order solutions do not carry the same “generalized” mass; (iii) It
+cannot be applied to modal approximation techniques and reduced-order
+models; (iv)  It fails for heterogeneous
+time/space approximations.
+
+The goal of this FS is to develop generic limiting techniques that are
+robust, efficient, HPC portable, and potentially easy to implement in
+LANL's legacy codes.
+
+
+\vspace*{\baselineskip}
+
+
+
+\textbf{Cover Page Markings:} NA
+
+
+\pagebreak
+
+\textbf{Problem, Hypothesis \& Technical Rationale:}
+\vspace*{\baselineskip}
+
+\textit{Why:} Accurate quantitative predictions of coupled multiphysics  systems
+are at the center of LANL's mission and many innovative applications like
+hypersonic flight, high energy density phenomena, control and
+manipulation of high-speed flows involving complex fluids, mixtures,
+and explosives, possibly interacting with radiation and
+electromagnetic fields. Some of these
+applications have the potential to enable new energy sources by
+forming and controlling plasmas with magnetic confinement (tokamaks and
+stellarators) or inertial confinement (ICF).  But simulating complex multiphysics
+problems involving multiple time and length scales \textbf{still poses}
+robustness challenges both for direct and inverse
+methods.
+
+Although the machine learning revolution promises to solve some of
+these problems, data sampling is a major bottleneck due to \textbf{lack of
+robustness} for many sample-driven computational approaches such as
+surrogate-based optimization, Bayesian inverse problems, and
+uncertainty quantification.  Machine learning requires running legacy
+codes a large number of times in order to learn the functional
+dependence with respect to input parameters. But sampling large
+parameter spaces via thousands of automated runs of complex
+multiphysics legacy codes using traditional approximation methods is
+hindered by the fact that a significant number of simulations never
+reach completion due to robusness issues, thereby undermining the
+promises of the machine learning revolution.  There is therefore an
+\textbf{urgent need} for the development of agile, non-intrusive, and provably
+robust numerical methods that can reliably solve multiphysics
+applications using heterogeneous approximation techniques.
+
+\vspace*{\baselineskip}
+
+\textit{What:} We posit that a key to achieving robustness when leveraging
+heterogeneous approximation techniques is to ensure that every piece
+of the computational chain is maintains physical bounds (i.e. is
+invariant-domain preserving (IDP)).
+The objective of this FS is to
+address the robustness issue induced by the violation of physical
+bounds in the context of heterogeneous approximation techniques.
+In this FS we will develop generic limiting techniques that are
+robust, efficient, HPC portable, and potentially easy to implement in
+LANL's legacy codes.
+
+\vspace*{\baselineskip}
+
+\textit{How:} Enforcing physical bounds is usualy done in the
+litearture by limiting slopes or fluxes. Most limiting methods cosnist
+of squeezing some accurate (but fragile) approximation towards a
+robust (but inaccurate) approximation until some physical bounds are
+met. This powerful methodology is unfortunately highly intrusive as it
+needs to access and manipulate fluxes and blend high-orderr and
+low-order fluxes. The intrusiveness renders this methodology
+unapplicable for LANL's legacy codes. It is also extremly curbesome
+when deployed on multiphysics problems are the fluxes in this cases
+may not be easily indentified.
+
+The key idea that we will deploy in the context of this FS is based on
+a algorithm recently proposed by
+J.L. Guermond\footnote{J.-L. Guermond,
+\url{https://arxiv.org/abs/2606.22839}}.  The method is essentially a
+post-processing conservative technique informed of the physics with
+some a priori reasonable mathematical knowledge of the bounds that are
+expected.  The input for the proposed methods will be a list of
+(physical) states a of user-defined concave functionals encoding some
+a priori mathematical knowledge on the local bounds tha must be
+enforced. The main idea is to locally take from the states that are in
+bounds and give to the states that are out of bounds while maintaining
+local conservation. The idea sounds simple, but the two main
+difficulties that make it non-trivial are that the states and the
+budgets are vector-valued and the bounds are often nonliear. The
+method has already been demonstrated to be efficient and versatile,
+and it is indeed non-intrusive.
+
+
+
+
+
+
+
+
+\textcolor{red}{\textit{(Suggested section length \(\sim \)1
+    page)}}\\ \textcolor{red}{STATE YOUR INNOVATION. COMPARE TO STATE
+  OF THE ART. DEFINE SUCCESS AND DETAIL YOUR OUTCOMES (Intellectual
+  property? Preliminary data for another proposal? Fill a gap?
+  Foundational understanding?)}\\ \textcolor{red}{COMMUNICATE “WHY
+  NOW?”}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Clearly articulate a technically sound concept that defines the problem well, employs appropriate methods or models, and incorporates testable elements aimed at producing early results or reducing key uncertainties.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Review criteria:}
+\begin{quote}
+\vspace{-0.3cm}
+    \textcolor{red}{\textit{\textbf{Technical Vitality} review criteria weighting 40\%, covering \textbf{Clarity of Problem and Objectives} and \textbf{Innovation and Technical Merit.}}}
+\end{quote}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{What \textbf{technical problem or uncertainty} does this feasibility study address?}}
+    \item \textcolor{red}{\textit{Why is resolving this uncertainty important?}}
+    \item \textcolor{red}{\textit{What are the \textbf{specific hypotheses, assumptions, or risks} to be tested or reduced?}}
+    \item \textcolor{red}{\textit{What is the \textbf{technical design} of the study?}}
+    \item \textcolor{red}{\textit{What experiments, models, or analyses will be performed?}}
+    \item \textcolor{red}{\textit{How do these tasks directly test the hypotheses or reduce risk?}}
+    \item \textcolor{red}{\textit{What \textbf{metrics or criteria} will determine whether hypotheses are supported, disproved, or reframed?}}
+    \item \textcolor{red}{\textit{How will the study capture \textbf{useful lessons}, even from negative or inconclusive results?}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textbf{Mission Impact \& Institutional Agility:}
+
+
+Progress in numerical techniques is crucial for enhancing the LANL's
+simulation capabilities. Specifically, developing robust simulations
+that maintain stability and accuracy across various scenarios is
+essential.
+
+
+
+
+\textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{1}{2}$ page)}}\\
+\textcolor{red}{Foster cutting edge science, technology, and engineering that ready the Laboratory to respond to current and future mission and national needs.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Review criteria:}\\
+\begin{quote}
+    \vspace{-0.4cm}\textcolor{red}{\textit{\textbf{Mission Agility} review criteria weighting 20\%, covering \textbf{Mission Agility} and \textbf{Mission Institutional Learning.}}}
+\end{quote}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{What is the potential \textbf{value of the insights} (positive or negative) for:}}
+    \begin{itemize}[noitemsep,nolistsep]
+        \item \textcolor{red}{\textit{the \textbf{technical community}}}
+        \item \textcolor{red}{\textit{LANL's \textbf{mission space}, and}}
+        \item \textcolor{red}{\textit{\textbf{future projects} that could build on these findings?}}
+    \end{itemize}
+    \item \textcolor{red}{\textit{How will the study contribute to \textbf{institutional learning} (roadmaps, datasets, methods, lessons-learned)?}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textbf{Approach, Resources \& Path Forward:} \textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{3}{4}$ page)}}\\
+\textcolor{red}{Articulates a feasibility study that is well conceived, clearly organized, and appropriately scoped, with structure, methods, and milestones designed to produce testable outcomes and generate results that can guide future work.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Review criteria:}
+\begin{quote}
+\vspace{-0.4cm}
+    \textcolor{red}{\textit{\textbf{Research Approach} review criteria total weight 40\%, covering \textbf{Testability and Risk Reduction, Clarity and Organization} and \textbf{Scope, Readiness, Budget, and Duration.}}}
+\end{quote}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{What is the \textbf{plan of work} for the study?}}
+    \item \textcolor{red}{\textit{Key \textbf{{tasks, milestones, or deliverables.}}}}
+    \item \textcolor{red}{\textit{How will your approach provide \textbf{evidence to validate, refine, or reject} the hypothesis?}}
+    \item \textcolor{red}{\textit{What outputs will you produce (data, models, prototypes, analyses)?}}
+    \item \textcolor{red}{\textit{What are the \textbf{success criteria}?}}
+    \item \textcolor{red}{\textit{How will results - positive or negative - inform \textbf{next steps} (scale up, redesign, or close)?}}
+    \item \textcolor{red}{\textit{What are the \textbf{non-technical risks} (facility access, staffing, regulatory, collaboration) and how will you mitigate them?}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Proposers should provide enough information for reviewers to assess the scope of work, budget and duration – and that the project is in compliance with \textbf{\href{https://ldrd.lanl.gov/q/public/policy?inline=true}{LDRD Rules and Procedures} (pdf)}}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{Why are the \textbf{proposed budget} and \textbf{duration} appropriate? (optional bullets: Personnel, Equipment, Materials, Travel)}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Since the projects are such short time scales, it should be stated that the work can be turned on immediately if funded. If there is a new activity involved that needs approval, if special materials or lab equipment needs to be procured, if HPC accounts are not in place already, etc. this will raise questions for the reviewers on whether the proposed research can be completed in the time frame provided.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{BUDGET RELATED:}\\
+\textcolor{red}{If working with external collaborators, communicate timing, any preferred MOUs and academic partners. MAKE SURE YOU COMPLY WITH \textbf{\href{https://ldrd.lanl.gov/q/public/policy?inline=true}{LDRD Rules and Procedures} (pdf)}}\\
+\textcolor{red}{FUNDING LIMITS AND PURCHASE DEADLINES.}
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textbf{Collaborators: External Collaborations are permitted.} No more than 25\% of the project budget may be spent at a collaborator institution \textbf{(7.3.5 Budget Share for Collaborators).}}
+    \item \textcolor{red}{\textbf{Purchases:}}
+    \begin{itemize}[noitemsep,nolistsep]
+        \item \textcolor{red}{M\&S costs must not exceed 25\% of the project’s total budget \textbf{(7.3.2 Materials and Services (M\&S))}}
+        \item \textcolor{red}{All single items \> \$5k must be received at least three-months before the project ends. \textbf{(7.4.2 Purchasing Limitations for Final-year Projects)}}
+    \end{itemize}
+\end{itemize}
+
+\begin{center}
+\textit{end of page limited section}
+\end{center}
+\vspace{-0.7cm}
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+
+%%%%%%%%%%%%%%%%% APPENDICES  %%%%%%%%%%%%%%%%%%
+\vspace*{\baselineskip}
+
+\textbf{Appendix:} \textcolor{red}{These sections are not page limited.}
+\vspace*{\baselineskip}
+
+\textbf{AI Disclosure statement:} \textcolor{red}{\textbf{Substantive contributions by AI must be disclosed.} \\
+\textcolor{red}{See \underline{CEA's} "Minimal Use vs. Substantive Use” and "Disclosure Library" resources.}}
+\vspace*{\baselineskip}
+
+\textbf{Glossary of Acronyms:} \textcolor{red}{\textbf{Include a list of acronyms (with definitions) used in the proposal.}}
+\vspace*{\baselineskip}
+
+%%%%%%%%%%%%%%%%% REFERENCES  %%%%%%%%%%%%%%%%%%
+% If submitting a Concept Disruptor, copy this section starting from \renewcommand and ending in \vspace*{\baselineskip} and paste it into your Concept Disruptor template where indicated (look for commented-out References section. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\renewcommand{\bibpreamble}{[1.] This is an example reference. NOTE: If you are a LaTeX user, the list should automatically populate when you type ``$\backslash$cite$\{$insert name of .bib reference$\}$" within the BODY of your proposal.}
+\bibliographystyle{abbrv}
+\bibliography{LDRD_IR_BIB_template}
+\textcolor{red}{\textit{(\textbf{Optional.} While not page limited, strongly recommend to not exceed 1 page)}}
+\vspace*{\baselineskip}
+
+\textcolor{red}{This page is for references only. DO NOT include comments, notes, etc.  References should not contain images/figures.  Additional content included in the references that are deemed to be proposal-like (e.g. language such as but not limited to “we,” “this proposal,” “our competition”) may provide a substantive advantage and will result in the rejection of the proposal without technical review. Again, be judicious in your citation selection.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Do not include any letters of reference or recommendation in your proposal. They will be discarded without consideration.}
+\vspace*{\baselineskip}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% REQUIRED DMSP TEMPLATE  %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    \Large \textbf{DMSP for $<$Proposal Title$>$}
+    \vspace{0.5cm}
+    
+    \normalsize \textbf{\textit{\underline{PI:}}} Name (Last, First, Middle Initial); Group; Email
+\end{center}
+\vspace*{\baselineskip}
+
+\begin{center}
+    
+\textcolor{red}{Include a coversheet only if your DMSP for your proposal includes Controlled Unclassified Information (CUI). Delete this page if your proposal does not contain CUI.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textit{Coversheet not included in proposal page count.}}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textbf{Use the coversheet template provided by the LANL Office of Classification:}}\\
+\href{https://www.gsa.gov/system/files/SF901-18a.pdf}{SF901, Controlled Unclassified Information Cover Sheet}
+\vspace*{\baselineskip}
+
+\textcolor{red}{(Also include the appropriate page markings in the document header as appropriate. For identifying and marking CUI, see P204-1 Controlled Unclassified at int.lanl.gov/policy.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Navigation: int.lanl.gov/policy $>$ Search for Requirements $>$ enter P204-1, and search}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Proposers submitting classified content should work with their DC and reference relevant guidance for appropriate markings.)}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textbf{NOTE: CDO and LDRD rely on you, the subject matter expert, to advise CDO and LDRD on the handling of your DMSP document’s Controlled Unclassified Information (CUI). Please reference the Document upload page in the Q system for CUI handling types that are accepted for LDRD proposals.}}
+
+\end{center}
+
+\newpage
+
+\begin{center}
+    \Large \textbf{DMSP for $<$Proposal Title$>$}
+    \vspace{0.5cm}
+\end{center}
+
+\Large{\textcolor{blue}{\textbf{Data Description}}} 
+\vspace*{\baselineskip}
+
+\normalsize
+\textbf{Project Title:}
+\vspace*{\baselineskip}
+
+\textbf{Project Number:}
+\vspace*{\baselineskip}
+
+\textbf{Date:}
+\vspace*{\baselineskip}
+
+\textbf{Contact Name and Email:}\\
+\textit{Who is responsible for management and sharing of this dataset?}\\
+\textit{Provide Znumber, Name, Role, ORCID, and email address.}
+\vspace*{\baselineskip}
+
+\textbf{Describe your data.}\\
+\textit{Briefly describe the data that will be generated or used in this project, including its purpose, content, and context.}\\
+\textit{Will the data be updated after initial release? If so, describe the update frequency and versioning approach.}\\
+\textit{Example: “The project is expected to generate two types of data (tabular and simulation output) to support [project goal]. The tabular data will be used for... The simulation data will be used for... We plan to update the data after initial release on a yearly basis; specific versioning changing will be documented with the dataset in a README file.”}
+\vspace*{\baselineskip}
+
+\textbf{Scientific Domain}\\
+\textit{What is the scientific domain of the dataset?}
+\vspace*{\baselineskip}
+
+\textbf{Linked Publications or Outputs (Optional)}\\
+\textit{Is the dataset in support of or linked to publications or other outputs such as journal articles or technical reports?  If so, please describe (title, DOI, or other information sufficient to identify and locate.)}\\
+\textit{Example: “The publicly available data will be sourced from [citation] or None yet; to be added upon publication/deposit.”}
+\vspace*{\baselineskip}
+
+\textbf{Landing page (Optional)}\\
+\textit{If available, provide the URLs for the dataset’s landing page, repository record, and/or project homepage. (\href{https://int.lanl.gov/org/ddops/aldbus/cio/cdo/_assets/Datasheet Template.docx}{Link to GM-DP Datasheet})}\\
+\textit{Example: “None yet; to be added upon publication/deposit.”}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data types, sources, and standards}}}
+\vspace*{\baselineskip}
+
+\normalsize \textbf{Anticipated Data Formats and Modalities}\\
+\textit{What data formats, modalities, and aggregation are expected to be generated? For example: file formats (CSV, HDF5, GeoTIFF, etc.), data modality (tabular, image, text, time series, geospatial, simulation output, etc.), aggregation (raw, aggregated, summarized, etc.).}
+\vspace*{\baselineskip}
+
+\textit{Example: The project is expected to generate anticipated tabular and simulation data. Formats will likely include CSV or HDF5; modalities include tabular/time‑series; aggregation is expected to be raw and summarized.}
+\vspace*{\baselineskip}
+
+\textbf{Sources}\\
+\textit{What will the sources of the data be - either generated by the project or external sources of data?  How will the data be generated or collected?}
+\vspace*{\baselineskip}
+
+\textit{Example: The project will generate the simulation data using... or the data will be downloaded from the supplementary material of [paper].}
+\vspace*{\baselineskip}
+
+\textbf{Quality and Bias}\\
+\textit{Are there any known issues with data quality and/or bias in the data?}
+\vspace*{\baselineskip}
+
+\textit{Example: Potential modeling bias from boundary conditions; QC steps will be recorded in the data catalog at release. Or unknown at this time.}
+\vspace*{\baselineskip}
+
+\textbf{Volume}\\
+\textit{What is the anticipated volume / size of the data?}
+\vspace*{\baselineskip}
+
+\textit{Example: Order‑of‑magnitude 10–100 GB; final volume will be captured on the data catalog.}
+\vspace*{\baselineskip}
+
+\textbf{Timeline}\\
+\textit{What is the anticipated timeline of data production?}
+\vspace*{\baselineskip}
+
+\textit{Example: Initial data generation targeted for Q3–Q4 FY26.}
+\vspace*{\baselineskip}
+
+\textbf{Metadata / Documentation}\\
+\textit{What metadata and documentation will accompany the data to support understanding and reuse? (e.g., README files, data dictionaries, metadata schemas, ontologies, etc.). List discipline-specific standards, if used. (\href{https://int.lanl.gov/org/ddops/aldbus/cio/cdo/_assets/Datasheet Template.docx}{Link to GM-DP Datasheet})}
+\vspace*{\baselineskip}
+
+\textit{Example: Metadata will be stored along with in the data in CSV files using [domain specific metadata standard] or Metadata will be stored along with in the data in CSV files with key fields [list a few key metadata fields] .... Additional documentation will be stored in README files...}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Related tools, software, and code}}}\\
+\normalsize
+\textit{List the tools, software, and code that will be required to generate, process, or use the data.}\\
+\textit{Include software (with version), equipment, and facilities as applicable.}\\
+\textit{Use a delimited list (e.g., semicolon-separated)}
+\vspace*{\baselineskip}
+
+\textit{Example: Python 3.x; TensorFlow 2.x; LANL HPC environment; exact versions to be updated at a later date.}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data Access and Reuse}}}\\
+\normalsize
+\textbf{Public Access Level}\\
+\textit{What is the expected public access level for the data (e.g., unclassified - unlimited release, controlled unclassified information, etc.)?}
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textit{Unclassified - Unlimited Release}
+    \item \textit{CUI - Controlled Unclassified Information}
+    \item \textit{Classified}
+    \item \textit{Other}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textit{Example: Unclassified – Unlimited Release (subject to review).}
+\vspace*{\baselineskip}
+
+\textbf{Persistent Identifiers (PIDs)}\\
+\textit{Will a Digital Object Identifier (DOI) or other persistent identifier be applied?}
+\vspace*{\baselineskip}
+
+\textit{Example: An internal PID will be produced through DIANA. We will also plan to upload the finalized dataset used in the publication to Zenodo which will produce a public DOI.}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data Security, Preservation, and Sharing}}}
+\vspace*{\baselineskip}
+
+\normalsize
+\textbf{Data Storage}\\
+\textit{Please list where data will be stored during project duration and before review and release. \href{https://docs.google.com/spreadsheets/d/1_TCq0XZ4PuEopOc877CL_8KEhQj63_Jmxn9T_2U1HtQ/edit?usp=sharing}{RL's Generalist Data Repositories and Storage Matrix} - Link to webpage that outlines storage options (LDRD and non-LDRD prices), Q\&A page and CDO POCs}
+\vspace*{\baselineskip}
+
+\textit{Example: Short term data storage will be on HPC scratch and campaign space. Long term internal data storage will be through DIANA.}
+\vspace*{\baselineskip}
+
+\textbf{Sharing \& Release}\\
+\textit{Describe the plan and timeline for data sharing and release, including any embargo periods, access conditions, IP\#’s or updates over time.  Indicate anticipated \href{https://creativecommons.org/share-your-work/cclicenses/}{Creative Commons license} if any.}
+\vspace*{\baselineskip}
+
+\textit{Example: Target public release within 6 months post‑project; potential embargo for publications; expected license CC‑BY (final license on data catalog). All publicly released data and code will follow LANL procedures.}
+\vspace*{\baselineskip}
+
+\textbf{Data Repositories}\\
+\textit{Please list any data repositories that will likely be used to share the data. See NSTC \href{https://rosap.ntl.bts.gov/view/dot/62310}{"Desirable Characteristics of Data Repositories for Federally Funded Research"}. See \href{https://www.re3data.org/}{https://www.re3data.org/} for example repositories.}
+\vspace*{\baselineskip}
+
+\textit{Example: We plan to store any publication data on Zenodo.}
+\vspace*{\baselineskip}
+
+\textbf{Data Value}\\
+\textit{How long do you expect the data to be of value to the scientific community?}
+\vspace*{\baselineskip}
+
+\textit{Example: Anticipated community value 5-10 years.}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Provenance \& Motivation}}}\\
+\normalsize
+\textbf{User Facility/Proposal IDs:}\\
+\textit{“If created at a scientific user facility, provide project/proposal identifiers or citation.”}
+\vspace*{\baselineskip}
+
+\textit{Example: The dataset will be produced at [user facility]; user facility IDs will be added when assigned.}
+\vspace*{\baselineskip}
+
+\textbf{AI Context:}\\
+\textit{“Was the dataset created for AI? Describe intended tasks.”}
+\vspace*{\baselineskip}
+
+\textit{Example: Yes, the dataset was produced to support [AI task].}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Versioning}}}\\
+\normalsize
+This table tracks DMSP revisions; dataset versioning will be maintained with the data catalog/repository record.
+
+\begin{table}[h!]
+\begin{tabular}{||c|c|c|c||}
+\hline
+Version & Date & Authors & Changes \\ [1ex] 
+ \hline\hline
+  &  &  &  \\ 
+  \hline
+  &  &  &  \\
+  \hline
+  &  &  &  \\
+ \hline
+  &  &  &  \\
+ \hline
+  &  &  &  \\ [1ex] 
+ \hline
+\end{tabular}
+\end{table}
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%% CONCEPT DISRUPTOR TEMPLATE  %%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    \large \textbf{Concept Disruptor (CD) Template and Instructions}
+\end{center}
+
+This document provides the instructions and template for preparing a \textbf{\textit{Concept Disruptor (CD)}} proposal. Each section of the template provides instructions for that section AND its alignment with the Review Criteria. Do not deviate from the format, font, font size, or page limits provided in the template. 
+\vspace*{\baselineskip}
+
+\textbf{Be sure to confirm your Q system flag (“bubble”) correctly indicates the call opportunity you are proposing to. This call opportunity flag will reflect “CD”.}\\
+\begin{figure}[H]
+    \centering
+    \includegraphics[scale=.80]{fig/ConceptDisruptorFlag.png}
+\end{figure}
+
+\textbf{\textit{Proposals must focus on transformative, innovative, high-risk work.}}
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textbf{Transformative research} is driven by innovations that have the potential to radically (1) change, expand, or develop new understanding of an important existing scientific or engineering concept, (2) change the way we solve relevant problems, or (3) allow us to solve relevant problems we couldn’t solve before.
+    \item \textbf{Innovation} in research can be a new idea, application of an existing idea to new field, or the integration of existing ideas to provide a novel solution.
+    \item \textbf{Technical risk}  is the likelihood that the proposed innovation will fail to result in transformative research. The existence of technical risk should not reduce the score of a proposal if the risk is clearly articulated and the mitigation plan is sound.  Other non-technical risks may exist related to project management, staffing, and facilities, and they should be mitigated.
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textbf{\textit{Concept Disruptor} proposals are intended to address the most untested, high-risk aspects of a new idea. The expedited proposal and review process will emphasize innovation and accept a higher level of technical risk. The objective is to increase acceptance of high-risk proposals that would explore new concepts with the potential to transform the technical field. \textit{Concept Disruptor}} proposal review criteria will emphasize novelty, ambition, and reframing; may include higher uncertainty or conceptual gaps; and be evaluated with tolerance for speculative thinking.
+\vspace*{\baselineskip}
+
+\textit{Proposers may use their preferred text editor and are not tied to using Microsoft Word; LDRD requires proposers upload a PDF.}
+\vspace*{\baselineskip}
+
+\textbf{LDRD is making available Microsoft Word and LaTeX versions of this proposal template.} 
+\vspace*{\baselineskip}
+
+Proposals must be written for a non-expert audience.
+\vspace*{\baselineskip}
+
+\textbf{Complete this proposal Template, observing all page limits:}\\
+\begin{itemize}[noitemsep,nolistsep]
+    \item[--] Proposal Coversheet with the following items AND any required markings (CUI or classified material, see \href{https://int.lanl.gov/science/programs/ldrd/resources/classified-submissions.shtml}{Submitting Classified Documents to the LDRD Program Office} webpage)
+       \begin{itemize}[noitemsep,nolistsep]
+            \item[\tiny$\blacksquare$] Duration
+            \item[\tiny$\blacksquare$] Funding
+            \item[\tiny$\blacksquare$] Project Description
+        \end{itemize}
+    \item[--] \textbf{Proposal body} (maximum of 2 pages of text and figures)
+    \item[--] \textbf{Appendices:}
+    \begin{itemize}[noitemsep,nolistsep]
+        \item[\tiny$\blacksquare$]\textit{AI Disclosure statement} (if substantive and applicable),
+        \item[\tiny$\blacksquare$]\textit{Glossary of Acronyms},
+        \item[\tiny$\blacksquare$]\textit{References} (while not page limited, strongly recommended to not exceed 1 page),
+        \item[\tiny$\blacksquare$]\textbf{REQUIRED:} \textit{Data Management and Sharing Plan (DMSP)} (no page limit).
+    \end{itemize}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textbf{Format of the proposal template:} The proposal is limited to two (2) pages total including text and figures. The Coversheet and Appendix (References, Acronyms) do NOT count toward this page limit. Do not change the fonts (12 point) and margins (1”). This applies to the references as well. \textit{Do not delete the section headers.} \textcolor{red}{Guidance for each section is provided in red and should be deleted and replaced with your response.}
+\vspace*{\baselineskip}
+
+\textbf{NOTE: LDRD reserves the right to redact content above the two-page proposal body limit.}
+\vspace*{\baselineskip}
+
+If submitting a proposal with classified material, either in the form of an addendum or full document, the \textbf{classified and unclassified submissions together MUST be within the total page limits.} Please refer to the webpage \href{https://int.lanl.gov/science/programs/ldrd/resources/classified-submissions.shtml}{Submitting Classified Documents to the LDRD Program Office}. 
+\vspace*{\baselineskip}
+
+\textbf{ROSY Review: Derivative Classifier (DC) Review} 
+
+All proposal submissions require classification review via the Laboratory \href{https://rosy.lanl.gov/}{ROSY (Review Only SYstem)}; ROSY permits a \href{https://classify.lanl.gov/dcsearch/}{Derivative Classifier (DC)}. There are several paths for a review, detailed on the LDRD webpage \href{https://int.lanl.gov/science/programs/ldrd/propose/LDRD_Document_Review.shtml}{Guidance for Classification Assessment of LDRD Documents}. LDRD requests that the proposers look outside their team for their DC review. You will be required to enter the ROSY review number to finalize submission of your proposal in Q system. 
+\vspace*{\baselineskip}
+
+If your proposal fails to follow the template in such a way that it could receive a substantive advantage, your proposal may be rejected without technical review. While improper grammar, typos, and the like may not disqualify a proposal from technical review, they are distracting to reviewers and likely will disadvantage your proposal. 
+\vspace*{\baselineskip}
+
+\textbf{\textcolor{red}{All instructions (above) and guidance (red text) should be deleted from the submitted proposal.}}
+\vspace*{\baselineskip}
+
+\begin{center}
+\textbf{Contact the LDRD Program Office at 667-1235 or ldrd@lanl.gov if you have questions.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textbf{Delete this and previous pages to begin.}}
+ 
+\end{center}
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%     COVERPAGE     %%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    \large \textbf{Concept Disruptor (CD)}\\
+    \vspace{0.5cm}
+    \normalsize \textbf{Proposal Title}\\
+    \textbf{\textit{\underline {PI}}} Name (Last, First, Middle Initial); Group; Email
+\end{center}
+\vspace*{\baselineskip}
+
+\textbf{Duraction (mo):} \textcolor{red}{(State the number of months here. Justify in the relevant section below.) THIS MUST BE STATED, AND MUST MATCH YOUR SELECTION IN THE Q SYSTEM, AND MUST BE PERMISSIBLE BASED ON THE PROPOSAL BURNDOWN CHART (Check against the “Burndown table” in the formal Call’s Appendix)}
+\vspace*{\baselineskip}
+
+\textbf{Funding level (\$K):} \textcolor{red}{(State the requested budget here. Ensure it matches the request you entered in the Q system, and your justification narrative below. Maximum funding is \$165K.)}
+\vspace*{\baselineskip}
+
+\textbf{Project Description \textcolor{red}{(HARD LIMIT of 250 words):}}\\
+\textcolor{red}{Briefly summarize the project and the national security challenge it aims to address. Explain the high-level goals and expected outcomes of the research. State the impact the project could potentially have on DOE/NNSA or other Laboratory mission areas. Write in layman's terms for a non-technical audience.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textit{Project Descriptions are collected on this cover page. They are NOT collected in the Q system. This ensures your Project Description will receive a DC review. The Project Description is a high-level description. LDRD may also share this field internally with interested peer program offices.}}
+
+\begin{quote}
+    \textcolor{red}{\textit{Pro-tip: write a high-level, non-technical summary of the bold, disruptive idea, its potential impact and what you will test.}}
+\end{quote}
+
+\begin{center}
+    \textcolor{red}{\textbf{\large CHECK YOUR PROJECT DESCRIPTION WORD LIMIT.\\
+    LDRD RESERVES THE RIGHT TO REDACT OVER 250 WORDS.}}
+\end{center}
+
+\textbf{Cover Page Markings:} \textcolor{red}{\textbf{\underline{(If applicable) Controlled Unclassified Information (CUI)}}}
+
+\begin{center}
+    \textcolor{red}{(Include the appropriate page markings in the document header as appropriate. For identifying and marking CUI, see P204-1 \textit{Controlled Unclassified} at int.lanl.gov/policy.}
+    \vspace*{\baselineskip}
+    
+    \textcolor{red}{Navigation: int.lanl.gov/policy $>$ \textit{Search for Requirements} $>$ enter P204-1, and search}
+    \vspace*{\baselineskip}
+    
+    \textcolor{red}{Proposers submitting classified content should work with their DC and reference relevant guidance for appropriate markings.)}
+\end{center}
+\pagebreak
+
+\textcolor{red}{\textbf{(Replace all text in red with your responses. Be sure your total proposal body content aligns with the page numbering.)}}
+\vspace*{\baselineskip}
+
+\textbf{Problem, Opportunity \& Disruptive Concept:} \textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{3}{4}$ page)}}\\
+\textcolor{red}{Explore transformative higher risk ideas.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{STATE YOUR INNOVATION. COMPARE TO STATE OF THE ART. DEFINE SUCCESS AND DETAIL YOUR OUTCOMES (Intellectual property? Preliminary data for another proposal? Fill a gap? Foundational understanding?)}\\
+\textcolor{red}{COMMUNICATE “WHY NOW?”}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Consider addressing the specific review criteria:}
+\begin{quote}
+\vspace{-0.3cm}
+    \textcolor{red}{\textit{\textbf{Technical Vitality} review criteria weighting 60\%, covering \textbf{Transformative Potential, Conceptual Reframing, Innovation Beyond the State of the Art.}}}
+\end{quote}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{What \textbf{critical challenge or paradigm} does your idea aim to disrupt?}}
+    \item \textcolor{red}{\textit{Why has this problem resisted conventional solutions?}}
+    \item \textcolor{red}{\textit{Describe the \textbf{novel, disruptive concept} and what makes it \textbf{radically different}.}}
+    \item \textcolor{red}{\textit{What are the \textbf{technical risks}?}}
+    \item \textcolor{red}{\textit{\textbf{Why are these risks worth taking}, even with uncertainty or conceptual gaps?}}
+    \item \textcolor{red}{\textit{How will you \textbf{mitigate those risks} while maintaining a tolerance for technical risk?}}
+    \item \textcolor{red}{\textit{What is the potential \textbf{impact on the technical community and society} if this disruption succeeds?}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textbf{Mission Impact \& Institutional Agility:} \textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{1}{2}$ page)}}\\
+\textcolor{red}{Foster cutting edge science, technology, and engineering that ready the Laboratory to respond to current and future mission and national needs.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Consider addressing the specific review criteria:}
+\begin{quote}
+\vspace{-0.3cm}
+    \textcolor{red}{\textit{\textbf{Mission Agility} review criteria weighting 20\%, covering \textbf{Mission Agility} and \textbf{Mission Institutional Learning.}}}
+\end{quote}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{What \textbf{new mission capabilities, breakthroughs, or paradigm shifts} could result?}}
+    \item \textcolor{red}{\textit{How would this foster \textbf{cutting edge science, technology, and engineering} that prepare LANL to respond to \textbf{current and future mission and national needs}?}}
+    \item \textcolor{red}{\textit{How will the project promote \textbf{institutional learning} (e.g., roadmaps, data management, lessons-learned, reusable methods or datasets)?}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textbf{Approach, Risks \& Path Forward:} \textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{3}{4}$ page)}}\\
+\textcolor{red}{Consider addressing the specific review criteria:}
+\begin{quote}
+\vspace{-0.3cm}
+    \textcolor{red}{\textit{\textbf{Research Approach} review criteria weighting 20\%, covering \textbf{Concept Evaluation Strategy} and \textbf{Scope, Readiness, and Resources.}}}
+\end{quote}
+
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{What will you \textbf{actually do?}}}
+    \item \textcolor{red}{\textit{Define the \textbf{minimum viable test for your hypothesis.}}}
+    \item \textcolor{red}{\textit{Key \textbf{tasks, experiments, or milestones.}}}
+    \item \textcolor{red}{\textit{How will your approach \textbf{validate or invalidate the disruptive leap quickly}?}}
+    \item \textcolor{red}{\textit{What \textbf{outputs} will you produce?}}
+    \item \textcolor{red}{\textit{What does \textbf{success} look like, and what \textbf{metrics} will you use to measure it - even if partial? How will you capture useful lessons from experiments that disprove of challenge the concept?}}
+    \item \textcolor{red}{\textit{How will \textbf{outcomes (positive or negative)} inform \textbf{next steps} (scale, pivot, or close)?}}
+    \item \textcolor{red}{How will you mitigate \textbf{non-technical risks} (facility access, staffing, regulatory, or collaboration challenges?}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Proposers should provide enough information for reviewers to assess the scope of work, budget and duration– and that the project would be in compliance with \textbf{\href{https://ldrd.lanl.gov/q/public/policy?inline=true}{LDRD Rules and Procedurs} (pdf)}.}
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textit{Why are the \textbf{proposed budget} and \textbf{duration} appropriate? (optional bullets: Personnel, Equipment, Materials, Travel)}}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Since the projects are such short time scales, it should be stated that the work can be turned on immediately if funded. If there is a new activity involved that needs approval, if special materials or lab equipment needs to be procured, if HPC accounts are not in place already, etc. this will raise questions for the reviewers on whether the proposed research can be completed in the time frame provided.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{BUDGET RELATED:}\\
+\textcolor{red}{If working with external collaborators, communicate timing, any preferred MOUs and academic partners. MAKE SURE YOU COMPLY WITH \textbf{\href{https://ldrd.lanl.gov/q/public/policy?inline=true}{{LDRD Rules and Procedurs} (pdf)}}}\\
+\textcolor{red}{FUNDING LIMITS AND PURCHASE DEADLINES.}
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textcolor{red}{\textbf{Collaborators: External Collaborations are permitted.} No more than 25\% of the project budget may be spent at a collaborator institution \textbf{(7.3.5 Budget Share for Collaborators).}}
+    \item \textcolor{red}{\textbf{Purchases:}}
+    \begin{itemize}[noitemsep,nolistsep]
+        \item \textcolor{red}{M\&S costs must not exceed 25\% of the project’s total budget \textbf{(7.3.2 Materials and Services (M\&S))}}
+        \item \textcolor{red}{All single items \> \$5k must be received at least three-months before the project ends. \textbf{(7.4.2 Purchasing Limitations for Final-year Projects)}}
+    \end{itemize}
+\end{itemize}
+   
+\begin{center}
+\textit{end of page limited section}
+\end{center}
+\vspace{-0.7cm}
+\noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
+
+%%%%%%%%%%%%%%%%% APPENDICES  %%%%%%%%%%%%%%%%%%
+\vspace*{\baselineskip}
+
+\textbf{Appendix:} \textcolor{red}{These sections are not page limited.}
+\vspace*{\baselineskip}
+
+\textbf{AI Disclosure statement:} \textcolor{red}{\textbf{Substantive contributions by AI must be disclosed.} \\
+\textcolor{red}{See \underline{CEA's} "Minimal Use vs. Substantive Use” and "Disclosure Library" resources.}}
+\vspace*{\baselineskip}
+
+\textbf{Glossary of Acronyms:} \textcolor{red}{\textbf{Include a list of acronyms (with definitions) used in the proposal.}}
+\vspace*{\baselineskip}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% REFERENCES  %%%%%%%%%%%%%%%%%%
+% The LaTeX instructions to add the References section appear ONLY in the Feasibility Study portion of this template. Please copy/paste the References section from the Feasibility Study section into the Concept Disruptor section here. 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\textbf{References}\\
+\normalsize \textcolor{red}{LaTeX instructions to add References to your document appear \textbf{ONLY} in the Feasibility Study portion of this template. Please copy/paste the References section from the Feasibility Study section into the Concept Disruptor section here.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textit{\textbf{(Optional.} While not page limited, strongly recommend not exceeding 1 page)}}
+\vspace*{\baselineskip}
+
+\textcolor{red}{This page is for references only. DO NOT include comments, notes, etc.  References should not contain images/figures.  Additional content included in the references that are deemed to be proposal-like (e.g. language such as but not limited to “we,” “this proposal,” “our competition”) may provide a substantive advantage and will result in the rejection of the proposal without technical review. Again, be judicious in your citation selection.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Do not include any letters of reference or recommendation in your proposal. They will be discarded without consideration.}
+\vspace*{\baselineskip}
+
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%% REQUIRED DMSP TEMPLATE  %%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{center}
+    \Large \textbf{DMSP for $<$Proposal Title$>$}
+    \vspace{0.5cm}
+    
+    \normalsize \textbf{\textit{\underline{PI:}}} Name (Last, First, Middle Initial); Group; Email
+\end{center}
+\vspace*{\baselineskip}
+
+\begin{center}
+    
+\textcolor{red}{Include a coversheet only if your DMSP for your proposal includes Controlled Unclassified Information (CUI). Delete this page if your proposal does not contain CUI.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textit{Coversheet not included in proposal page count.}}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textbf{Use the coversheet template provided by the LANL Office of Classification:}}\\
+\href{https://www.gsa.gov/system/files/SF901-18a.pdf}{SF901, Controlled Unclassified Information Cover Sheet}
+\vspace*{\baselineskip}
+
+\textcolor{red}{(Also include the appropriate page markings in the document header as appropriate. For identifying and marking CUI, see P204-1 Controlled Unclassified at int.lanl.gov/policy.}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Navigation: int.lanl.gov/policy $>$ Search for Requirements $>$ enter P204-1, and search}
+\vspace*{\baselineskip}
+
+\textcolor{red}{Proposers submitting classified content should work with their DC and reference relevant guidance for appropriate markings.)}
+\vspace*{\baselineskip}
+
+\textcolor{red}{\textbf{NOTE: CDO and LDRD rely on you, the subject matter expert, to advise CDO and LDRD on the handling of your DMSP document’s Controlled Unclassified Information (CUI). Please reference the Document upload page in the Q system for CUI handling types that are accepted for LDRD proposals.}}
+
+\end{center}
+
+\newpage
+
+\begin{center}
+    \huge \textbf{DMSP for $<$Proposal Title$>$}
+\end{center}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data Description}}} 
+\vspace*{\baselineskip}
+
+\normalsize
+\textbf{Project Title:}
+\vspace*{\baselineskip}
+
+\textbf{Project Number:}
+\vspace*{\baselineskip}
+
+\textbf{Date:}
+\vspace*{\baselineskip}
+
+\textbf{Contact Name and Email:}\\
+\textit{Who is responsible for management and sharing of this dataset?}\\
+\textit{Provide Znumber, Name, Role, ORCID, and email address.}
+\vspace*{\baselineskip}
+
+\textbf{Describe your data.}\\
+\textit{Briefly describe the data that will be generated or used in this project, including its purpose, content, and context.}\\
+\textit{Will the data be updated after initial release? If so, describe the update frequency and versioning approach.}\\
+\textit{Example: “The project is expected to generate two types of data (tabular and simulation output) to support [project goal]. The tabular data will be used for... The simulation data will be used for... We plan to update the data after initial release on a yearly basis; specific versioning changing will be documented with the dataset in a README file.”}
+\vspace*{\baselineskip}
+
+\textbf{Scientific Domain}\\
+\textit{What is the scientific domain of the dataset?}
+\vspace*{\baselineskip}
+
+\textbf{Linked Publications or Outputs (Optional)}\\
+\textit{Is the dataset in support of or linked to publications or other outputs such as journal articles or technical reports?  If so, please describe (title, DOI, or other information sufficient to identify and locate.)}\\
+\textit{Example: “The publicly available data will be sourced from [citation] or None yet; to be added upon publication/deposit.”}
+\vspace*{\baselineskip}
+
+\textbf{Landing page (Optional)}\\
+\textit{If available, provide the URLs for the dataset’s landing page, repository record, and/or project homepage. (\href{https://int.lanl.gov/org/ddops/aldbus/cio/cdo/_assets/Datasheet Template.docx}{Link to GM-DP Datasheet})}\\
+\textit{Example: “None yet; to be added upon publication/deposit.”}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data types, sources, and standards}}}
+\vspace*{\baselineskip}
+
+\normalsize \textbf{Anticipated Data Formats and Modalities}\\
+\textit{What data formats, modalities, and aggregation are expected to be generated? For example: file formats (CSV, HDF5, GeoTIFF, etc.), data modality (tabular, image, text, time series, geospatial, simulation output, etc.), aggregation (raw, aggregated, summarized, etc.).}
+\vspace*{\baselineskip}
+
+\textit{Example: The project is expected to generate anticipated tabular and simulation data. Formats will likely include CSV or HDF5; modalities include tabular/time‑series; aggregation is expected to be raw and summarized.}
+\vspace*{\baselineskip}
+
+\textbf{Sources}\\
+\textit{What will the sources of the data be - either generated by the project or external sources of data?  How will the data be generated or collected?}
+\vspace*{\baselineskip}
+
+\textit{Example: The project will generate the simulation data using... or the data will be downloaded from the supplementary material of [paper].}
+\vspace*{\baselineskip}
+
+\textbf{Quality and Bias}\\
+\textit{Are there any known issues with data quality and/or bias in the data?}
+\vspace*{\baselineskip}
+
+\textit{Example: Potential modeling bias from boundary conditions; QC steps will be recorded in the data catalog at release. Or unknown at this time.}
+\vspace*{\baselineskip}
+
+\textbf{Volume}\\
+\textit{What is the anticipated volume / size of the data?}
+\vspace*{\baselineskip}
+
+\textit{Example: Order‑of‑magnitude 10–100 GB; final volume will be captured on the data catalog.}
+\vspace*{\baselineskip}
+
+\textbf{Timeline}\\
+\textit{What is the anticipated timeline of data production?}
+\vspace*{\baselineskip}
+
+\textit{Example: Initial data generation targeted for Q3–Q4 FY26.}
+\vspace*{\baselineskip}
+
+\textbf{Metadata / Documentation}\\
+\textit{What metadata and documentation will accompany the data to support understanding and reuse? (e.g., README files, data dictionaries, metadata schemas, ontologies, etc.). List discipline-specific standards, if used. (\href{https://int.lanl.gov/org/ddops/aldbus/cio/cdo/_assets/Datasheet Template.docx}{Link to GM-DP Datasheet})}
+\vspace*{\baselineskip}
+
+\textit{Example: Metadata will be stored along with in the data in CSV files using [domain specific metadata standard] or Metadata will be stored along with in the data in CSV files with key fields [list a few key metadata fields] .... Additional documentation will be stored in README files...}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Related tools, software, and code}}}\\
+\normalsize
+\textit{List the tools, software, and code that will be required to generate, process, or use the data.}\\
+\textit{Include software (with version), equipment, and facilities as applicable.}\\
+\textit{Use a delimited list (e.g., semicolon-separated)}
+\vspace*{\baselineskip}
+
+\textit{Example: Python 3.x; TensorFlow 2.x; LANL HPC environment; exact versions to be updated at a later date.}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data Access and Reuse}}}\\
+\normalsize
+\textbf{Public Access Level}\\
+\textit{What is the expected public access level for the data (e.g., unclassified - unlimited release, controlled unclassified information, etc.)?}
+\begin{itemize}[noitemsep,nolistsep]
+    \item \textit{Unclassified - Unlimited Release}
+    \item \textit{CUI - Controlled Unclassified Information}
+    \item \textit{Classified}
+    \item \textit{Other}
+\end{itemize}
+\vspace*{\baselineskip}
+
+\textit{Example: Unclassified – Unlimited Release (subject to review).}
+\vspace*{\baselineskip}
+
+\textbf{Persistent Identifiers (PIDs)}\\
+\textit{Will a Digital Object Identifier (DOI) or other persistent identifier be applied?}
+\vspace*{\baselineskip}
+
+\textit{Example: An internal PID will be produced through DIANA. We will also plan to upload the finalized dataset used in the publication to Zenodo which will produce a public DOI.}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Data Security, Preservation, and Sharing}}}
+\vspace*{\baselineskip}
+
+\normalsize
+\textbf{Data Storage}\\
+\textit{Please list where data will be stored during project duration and before review and release. \href{https://docs.google.com/spreadsheets/d/1_TCq0XZ4PuEopOc877CL_8KEhQj63_Jmxn9T_2U1HtQ/edit?usp=sharing}{RL's Generalist Data Repositories and Storage Matrix} - Link to webpage that outlines storage options (LDRD and non-LDRD prices), Q\&A page and CDO POCs}
+\vspace*{\baselineskip}
+
+\textit{Example: Short term data storage will be on HPC scratch and campaign space. Long term internal data storage will be through DIANA.}
+\vspace*{\baselineskip}
+
+\textbf{Sharing \& Release}\\
+\textit{Describe the plan and timeline for data sharing and release, including any embargo periods, access conditions, IP\#’s or updates over time.  Indicate anticipated \href{https://creativecommons.org/share-your-work/cclicenses/}{Creative Commons license} if any.}
+\vspace*{\baselineskip}
+
+\textit{Example: Target public release within 6 months post‑project; potential embargo for publications; expected license CC‑BY (final license on data catalog). All publicly released data and code will follow LANL procedures.}
+\vspace*{\baselineskip}
+
+\textbf{Data Repositories}\\
+\textit{Please list any data repositories that will likely be used to share the data. See NSTC \href{https://rosap.ntl.bts.gov/view/dot/62310}{"Desirable Characteristics of Data Repositories for Federally Funded Research"}. See \href{https://www.re3data.org/}{https://www.re3data.org/} for example repositories.}
+\vspace*{\baselineskip}
+
+\textit{Example: We plan to store any publication data on Zenodo.}
+\vspace*{\baselineskip}
+
+\textbf{Data Value}\\
+\textit{How long do you expect the data to be of value to the scientific community?}
+\vspace*{\baselineskip}
+
+\textit{Example: Anticipated community value 5-10 years.}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Provenance \& Motivation}}}\\
+\normalsize
+\textbf{User Facility/Proposal IDs:}\\
+\textit{“If created at a scientific user facility, provide project/proposal identifiers or citation.”}
+\vspace*{\baselineskip}
+
+\textit{Example: The dataset will be produced at [user facility]; user facility IDs will be added when assigned.}
+\vspace*{\baselineskip}
+
+\textbf{AI Context:}\\
+\textit{“Was the dataset created for AI? Describe intended tasks.”}
+\vspace*{\baselineskip}
+
+\textit{Example: Yes, the dataset was produced to support [AI task].}
+\vspace*{\baselineskip}
+
+\Large{\textcolor{blue}{\textbf{Versioning}}}\\
+\normalsize
+This table tracks DMSP revisions; dataset versioning will be maintained with the data catalog/repository record.
+
+\begin{table}[h!]
+\begin{tabular}{||c|c|c|c||}
+\hline
+Version & Date & Authors & Changes \\ [1ex] 
+ \hline\hline
+  &  &  &  \\ 
+  \hline
+  &  &  &  \\
+  \hline
+  &  &  &  \\
+ \hline
+  &  &  &  \\
+ \hline
+  &  &  &  \\ [1ex] 
+ \hline
+\end{tabular}
+\end{table}
+
+%%%%%%%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%
+\end{document}
