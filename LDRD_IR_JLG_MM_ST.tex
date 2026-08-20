@@ -88,6 +88,10 @@
 % TODO: remove
 \newcommand{\new}[1]{\textcolor{magenta}{#1}}
 \newcommand{\ST}[1]{\textcolor{blue}{#1}}
+\newcommand{\nb}[3]{%
+  {\colorbox{#2}{\bfseries\scriptsize\textcolor{white}{#1}}}%
+  {\textcolor{#2}{\textit{#3}}}}
+\newcommand{\nbST}[1]{\nb{ST}{blue}{#1}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -112,14 +116,14 @@
 \textbf{Duration (mo):} 12 months.
 \vspace*{\baselineskip}
 
-\textbf{Funding level (\$K):} \$150K.
+\textbf{Funding level (\$K):} \$150K
 \vspace*{\baselineskip}
 
-\textbf{Project Description:} \textcolor{red}{250 words}
+\textbf{Project Description:} 
 
 \vspace*{0.5\baselineskip}
 
-\ST{Sampling large parameter spaces with multiphysics codes is necessary e.g., for V\&V studies, but might fail because of robustness issues. Machine learning techniques are particularly affected, as they require numerous simulations to learn the functional dependence on input parameters. The failure probability is high whenever the models and methods involve multiple time and space scales, adaptive multi-resolution, or mixed approximation paradigms. We posit that robustness can be achieved by ensuring that every piece of the computational chain maintains physical bounds.}
+\ST{Sampling large parameter spaces with multiphysics codes is necessary e.g., for V\&V studies, but it might fail because of robustness issues. Machine learning techniques are particularly affected, as they require numerous simulations to learn the functional dependence on input parameters. The failure probability is high whenever the models and methods involve multiple time and space scales, adaptive multi-resolution, or mixed approximation paradigms. We posit that robustness can be achieved by ensuring that every piece of the computational chain maintains physical bounds.}
 
 \vspace*{0.5\baselineskip}
 
@@ -127,7 +131,7 @@
 
 \vspace*{0.5\baselineskip}
 
-\ST{The goal of this FS is to develop generic limiting techniques that avoid these defects and that are robust, efficient, HPC portable, and straightforward to implement in LANL’s production codes. The deliverable is a standalone, open-source library verified on a LANL prototype production code.}
+\ST{The goal of this FS is to develop generic limiting techniques that avoid these defects and that are robust, efficient, HPC portable, and straightforward to implement in LANL’s production codes. The deliverable is a standalone, open-source library verified on a prototype LANL code.}
 
 \vspace*{\baselineskip}
 
@@ -211,8 +215,7 @@ unfortunately highly intrusive as it needs to access and manipulate fluxes and
 blend high-order and low-order fluxes. The intrusiveness renders this
 methodology inapplicable for \ST{LANL's complex multiphysics} codes. It is also extremely cumbersome when
 deployed on multiphysics problems as the fluxes in this cases may not be easily
-identified. \ST{\sout{(,especially when they are estimated in a matrix-free fashion, which
-is now the accepted standard at LANL for GPUs accelerated simulations.}}
+identified. 
 %
 The new idea to be deployed in the context of this FS is based on an algorithm
 recently proposed by \cite{Guermond_arxiv_2026} and based on
@@ -320,7 +323,7 @@ library written in a modern object-oriented language (C++ or F2023).
 host code adopts it without touching its flux and transport routines. It ships
 with the interface specification it requires of the host code, with the test
 problems used to verify conservation, accuracy, and cost, and with a publication
-documenting the theory and the validation results.}
+documenting the theory and the validation results.}\nbST{Justify why it is achievable within the proposed project duration of 12 month}
 
 
 \vspace*{0.5\baselineskip}
