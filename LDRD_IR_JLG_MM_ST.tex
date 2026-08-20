@@ -106,7 +106,7 @@ Sampling and exploring large parameter spaces using LANL's production
 codes often fails due to robustness issues. Machine learning
 techniques are significantly affected by the robustness issue as they
 require numerous simulations to learn the functional dependence on
-input parameters.  The failure probabibilty is high when the
+input parameters.  The failure probability is high when the
 models/approximation techniques involve various time/space scales,
 multi-rate time stepping, adaptive multi-resolution, and/or mix
 approximation paradigms. We posit that robustness can be achieved by ensuring that every piece of
@@ -124,7 +124,7 @@ solution until it meets required bounds.  The squeezing idea is
 powerful, but has four major defects: (i) It is intrusive: i.e., it
 requires manipulating slopes and fluxes which is impossible to do in
 LANL's production codes without engaging in costly and error-prone
-restructuration; (ii) It fails when the high-order and low-order
+restructuring; (ii) It fails when the high-order and low-order
 solutions do not carry the same “generalized” mass; (iii) It cannot be
 applied to modal approximation techniques and reduced-order models;
 (iv) It fails for heterogeneous time/space approximations.
@@ -172,7 +172,7 @@ dependence with respect to input parameters. But sampling large
 parameter spaces via thousands of automated runs of complex
 multiphysics codes using traditional approximation methods is
 hindered by the fact that a significant number of simulations never
-reach completion due to robusness issues, thereby undermining the
+reach completion due to robustness issues, thereby undermining the
 promises of the machine learning revolution.  There is therefore an
 \textbf{urgent need} for the development of agile, non-intrusive, and provably
 robust numerical methods that can reliably solve multiphysics
@@ -193,7 +193,7 @@ LANL's production codes.
 
 \vspace*{0.5\baselineskip}
 
-\textit{How:} Enforcing physical bounds is usualy done in the
+\textit{How:} Enforcing physical bounds is usually done in the
 literature by limiting slopes or fluxes. Most limiting methods consist
 of squeezing some accurate (but fragile) approximation towards a
 robust (but inaccurate) approximation until some physical bounds are
@@ -280,7 +280,7 @@ large parameter sets, and will help tackle complex multiphysics simulations with
 confidence. 
 Specifically, developing robust forward simulations
 that maintain physical states across various multiphysics scenarios will strengthen 
-LANL's ability to leverage more efficientlty machine learning and AI tools. 
+LANL's ability to leverage more efficiently machine learning and AI tools. 
 
 
 \vspace*{0.5\baselineskip}
@@ -337,7 +337,7 @@ written in a modern object-oriented language (C++ or F2023).
 
 \vspace*{0.5\baselineskip}
 
-\textit{Who:} The project will involve the PI (svetlana Tokareva) and two co-PIs who each hold a Joint
+\textit{Who:} The project will involve the PI (Svetlana Tokareva) and two co-PIs who each hold a Joint
 appointment (JT) with LANL since August 2025 and are  Professor of Mathematics at Texas A\&M
 University (Jean-Luc Guermond and Matthias Maier). Both J.L. Guermond
 and M. Maier are US citizens and have been collaborating with LANL for some time.
@@ -345,7 +345,7 @@ and M. Maier are US citizens and have been collaborating with LANL for some time
 
 \vspace*{0.5\baselineskip}
 
-\textit{How much:} The budget asked for the excecution of the project
+\textit{How much:} The budget asked for the execution of the project
 will divided as follows: (1) two one-week visits at Texas A\&M by the
 PI; two one-week visits at LANL by the two co-PIs during Spring 2027
 (travel and accommodation support for two weeks each, making it four
@@ -359,10 +359,10 @@ month of salary each supported by the grant.
 \textit{When:} The PI and co-PI are going to focus on the theoretical
 aspects of the project in the Fall of 2026 and identify a LANL
 prototype production code that will be used to demonstrate the
-feasibility of the proposed approach. Sping 2027 will be dedicated to
+feasibility of the proposed approach. Spring 2027 will be dedicated to
 testing the theoretical ideas from \citep{Guermond_arxiv_2026} and
 demonstrating that the proposed strategy can indeed be
-applied non-intrusively on testbed codes developed by the PIs. This
+applied non-intrusively on test-bed codes developed by the PIs. This
 period of tests and verification will likely lead to extensions and adaptations of the
 paradigm.  By the end of Spring 2027, the project will be ready for
 real tests on the predefined LANL prototype production code. Summer 2027 will be
