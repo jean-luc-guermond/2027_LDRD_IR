@@ -13,6 +13,7 @@
 \usepackage[colorlinks,breaklinks]{hyperref}
 \usepackage{hyperref}
 \usepackage{color}
+\usepackage[dvipsnames]{xcolor}
 \usepackage{cite}
 % \usepackage[numbers,sort&compress]{natbib}
 %\let\cite=\citet
@@ -72,6 +73,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\ie}{i.e.,\@\xspace}
+\newcommand{\eg}{e.g.,\@\xspace}
 \newcommand{\eqq}{{:=}}
 \def\Real{{\mathbb R}}
 \newcommand{\bu}{\textbf{u}}
@@ -88,7 +90,7 @@
 % TODO: remove
 \newcommand{\new}[1]{\textcolor{magenta}{#1}}
 \newcommand{\ST}[1]{\textcolor{blue}{#1}}
-
+\newcommand{\jlg}[1]{\textcolor{Maroon}{#1}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%     REVIEW CRITERIA
@@ -142,8 +144,8 @@
 \vspace*{0.5\baselineskip}
 
 \textit{Why:} \ST{Accurate quantitative predictions of coupled multiphysics systems
-are at the center of LANL's mission, e.g. in applications like high energy density physics, control and manipulation of
-high-speed flows of complex fluids, mixtures, and explosives, possibly
+are at the center of LANL's mission, \eg in applications like high energy density physics, control and manipulation of
+high-speed flows of complex fluids, mixtures, and explosives, \jlg{all} possibly
 interacting with radiation and electromagnetic fields.} Some of these
 applications have the potential to enable new energy sources by forming and
 controlling plasmas with magnetic confinement (tokamaks and stellarators) or
@@ -171,35 +173,13 @@ solve multiphysics applications using heterogeneous approximation techniques.
 
 \textit{What:} We posit that a key to achieving robustness when leveraging
 heterogeneous approximation techniques is to ensure that every piece of the
-computational chain maintains physical bounds (\ie is invariant-domain
-preserving (IDP)). The objective of this FS is to address the robustness issue
+computational chain maintains physical bounds\jlg{.}
+%(\ie is invariant-domain preserving (IDP)).
+The objective of this FS is to address the robustness issue
 induced by the violation of physical bounds in the context of heterogeneous
 approximation techniques. In this FS we will develop generic limiting techniques
 that are robust, efficient, HPC portable, and straightforward to implement in
 LANL's production codes.
-
-\new{The work is organized in two tasks.
-\textbf{T1 (theory):} extend the conservative redistribution framework of
-\cite{Guermond_arxiv_2026} to the vector-valued, nonlinear bounds and the
-heterogeneous approximations encountered in multiphysics applications, and
-establish the conservation and accuracy properties of the resulting
-post-processing step. \textbf{T2 (software):} implement the method as a
-standalone, GPU-portable library that acts on the state array alone, and
-exercise it through this interface on a production multiphysics code.}
-
-\new{Concretely, this FS tests three hypotheses. \textbf{H1
-(non-intrusiveness):} a limiter that reads and writes only the conserved state
-array between steps -- never a flux, a slope, or a stencil -- can enforce
-nonlinear physical bounds in a production code without modifying its transport
-kernels. \textbf{H2 (conservation and accuracy):} local conservative
-redistribution maintains conservation to machine precision and does not degrade
-the formal order of the host discretization. \textbf{H3 (generality and
-cost):} a single post-processing step serves heterogeneous approximations
-(finite volume, high-order and modal, spectral, reduced-order, multi-rate) at a
-small fraction of the cost of a time step and is GPU-portable. The study
-assumes that the host code exposes a per-step hook on the state array and that
-physically meaningful bounds can be specified a priori for the target
-model.}
 
 \vspace*{0.5\baselineskip}
 
@@ -211,33 +191,67 @@ unfortunately highly intrusive as it needs to access and manipulate fluxes and
 blend high-order and low-order fluxes. The intrusiveness renders this
 methodology inapplicable for \ST{LANL's complex multiphysics} codes. It is also extremely cumbersome when
 deployed on multiphysics problems as the fluxes in this cases may not be easily
-identified. \ST{\sout{(,especially when they are estimated in a matrix-free fashion, which
-is now the accepted standard at LANL for GPUs accelerated simulations.}}
+identified.
+%\ST{\sout{(,especially when they are estimated in a matrix-free fashion, which
+%is now the accepted standard at LANL for GPUs accelerated simulations.}}
 %
 The new idea to be deployed in the context of this FS is based on an algorithm
-recently proposed by \cite{Guermond_arxiv_2026} and based on
+recently proposed in \cite{Guermond_arxiv_2026} and based on
 \cite[\S2.3]{Kucharik_Shashkov_Wendroff_JCP_2003} and
 \cite{Liu_Cheng_Shu_JSC_2017,Griffin_Shu_RMathSci_2026}. This is a
 post-processing method informed of the physics through some a priori reasonable
-mathematical knowledge of the bounds that are expected. The input for the
+mathematical knowledge of expected bounds. The input for the
 proposed methods is a list of (physically relevant) states, and a user-defined
 concave functional encoding some a priori mathematical knowledge on the local
 bounds that must be enforced. The main idea is to locally take from the states
 that are in bounds and give to the states that are out of bounds while
 maintaining local conservation. The idea sounds simple, but the two main
 difficulties that make it non-trivial are that the states and the budgets are
-vector-valued and the bounds are nonlinear. The method has already been
-demonstrated to be efficient and versatile, and it is indeed non-intrusive.
+vector-valued and the bounds are nonlinear. This non-intrusive method has already been
+demonstrated to be efficient and versatile.
 
 \vspace*{0.5\baselineskip}
 
-\new{\textit{Success and outcomes:} The FS succeeds if hypotheses
-{\bfseries H1}--{\bfseries H3} are verified on a production code. The
-{\bfseries deliverables} are an open-source standalone limiting library
-with an interface specification and a publication. A negative result is
+\jlg{(JLG) to MM and ST: The limiter needs to have access to some
+  connectivity array to be able to redistribute. I think this too technical to explain.}
+
+\jlg{\textit{Assumptions: }}\new{This FS tests three
+  hypotheses. \textbf{H1 (non-intrusiveness):} a limiter that reads
+  and writes only the conserved state array between steps (never a
+  flux \jlg{or} a slope \jlg{\sout{, or a stencil}}), \jlg{and} can enforce
+  nonlinear physical bounds in a production code without modifying its
+  \jlg{\sout{transport}} kernels. The study assumes that the host code exposes a
+  per-step hook on the state array and that physically meaningful
+  bounds can be specified a priori for the target model.
+  \textbf{H2 (conservation and
+    accuracy):} local redistribution maintains
+  conservation to machine precision and does not degrade the formal
+  order of the host discretization. \textbf{H3 (generality and cost):}
+  a single post-processing step serves heterogeneous approximations
+  (finite volume, high-order and modal, spectral, reduced-order,
+  multi-rate) at a small fraction of the cost of a time step and is
+  GPU-portable. }
+
+\vspace*{0.5\baselineskip}
+
+\jlg{\textit{Technical Design: }}\new{The work is organized in two tasks.
+\textbf{T1 (theory):} extend the conservative redistribution framework of
+\cite{Guermond_arxiv_2026} to the vector-valued, nonlinear bounds and the
+heterogeneous approximations encountered in multiphysics applications, and
+establish the conservation and accuracy properties of the resulting
+post-processing step. \textbf{T2 (software):} implement the method as a
+standalone, GPU-portable library that acts on the state array alone, and
+exercise it through this interface on a production multiphysics code.}
+
+\vspace*{0.5\baselineskip}
+
+\new{\textit{Success, Risks \& Outcomes:} The FS succeeds if hypotheses
+{\bfseries H1}--{\bfseries H3} are \jlg{met} on a production code.  A negative result is
 equally actionable: it documents what a production code must expose for
 non-intrusive bound enforcement, and outlines the limit of the proposed
-technology.}
+technology. The
+{\bfseries deliverables} are an open-source standalone limiting library
+with an interface specification and a publication.}
 
 
 
@@ -250,7 +264,7 @@ technology.}
 \vspace*{0.5\baselineskip}
 
 
-The present project aligns with the LANL “Computational \& AI Breakthrough” Lab
+\jlg{\textit{Mission Impact:}} The present project aligns with the LANL “Computational \& AI Breakthrough” Lab
 Agenda by advancing research in two critical areas: “(1) Algorithmic and
 Numerical Method Development; (2) Software Design and Implementation, focusing
 on creating high-quality software that efficiently supports our developed
@@ -258,7 +272,7 @@ methods.”
 
 \vspace*{0.5\baselineskip}
 
-The new non-intrusive and approximation-agnostic techniques that will be
+\jlg{\textit{Institutional Agility:}} The new non-intrusive and approximation-agnostic techniques that will be
 developed in this proposal have the potential to unlock the capabilities of
 existing LANL production codes. Enhancing the robustness of forward and
 reduced-order simulations will increase the reliability of automated runs over
@@ -269,19 +283,17 @@ LANL's ability to make efficient use of machine learning and AI tools.
 
 \vspace*{0.5\baselineskip}
 
-\new{The insights are of value well beyond the codes used in this study. Bound
+\jlg{\textit{Insights:}} \new{\jlg{\sout{The insights are of value well beyond the codes used in this study. Bound
 preservation is currently achieved with intrusive limiters tailored to one
 discretization, so an alternative that acts on the state alone is relevant to
 any code able to expose that state, and the open-source library and the
-publication make both the method and its limits usable by others. The outcome
-also defines the next step: if the paradigm holds, it extends naturally to
-further physics and to adoption by other code teams; if it does not, the study
-says precisely which structural assumption fails and where the effort should go
-instead.}
-%
-\new{The study leaves durable institutional knowledge behind: The interface
+publication make both the method and its limits usable by others.}}
+    The outcome of the FS
+defines the next step: if the paradigm holds, it extends naturally to
+further physics and to adoption by other code teams \jlg{at LANL}.
+The study leaves durable institutional knowledge behind: \jlg{(i)} The interface
 specification records what a production code must expose for physical
-bounds to be enforced from the outside. In addition, the completion rates
+bounds to be enforced from the outside; \jlg{(ii) The} completion rates
 of automated parameter sweeps, measured with and without limiting,
 establish a robustness baseline for future work.}
 
@@ -329,7 +341,7 @@ documenting the theory and the validation results.}
 who each hold a Joint Appointment with LANL since August 2025 and are
 Professors of Mathematics at Texas A\&M University (Jean-Luc Guermond and
 Matthias Maier). Both J.L. Guermond and M. Maier are US citizens and have been
-collaborating with LANL for some time. \textcolor{red}{Students?}
+collaborating with LANL for some time.
 
 \vspace*{0.5\baselineskip}
 
@@ -356,17 +368,22 @@ tests on the selected LANL prototype production code. \ST{The team will
 finalize the project in the Summer 2027 and prepare a publication documenting the theoretical aspects and
 validation tests.}
 
+
+
 \vspace*{0.5\baselineskip}
 
 \textit{Metric:} Success is measured by verifying the hypotheses
 \new{{\bfseries H1}--{\bfseries H3}} on the selected LANL prototype
 production code.
 
-\ST{Risks: Something on Testability and Risk
-Reduction?}
+\vspace*{0.5\baselineskip}
 
 
-
+\ST{Risks:  \jlg{If the conclusions of this FS are negative}, this study
+will precisely identify which structural assumption fails and where the effort should go
+instead. This FS will document what a production code must expose for
+non-intrusive bound enforcement, and it will outline the limit of the proposed
+technology.}
 
 \begin{center}
 \textit{end of page limited section}
@@ -396,13 +413,13 @@ Reduction?}
 
 \textbf{Glossary of Acronyms:}
 
-V\&V: Verifiation and Validation
+V\&V: Verification and Validation
 
 ML: Machine Learning
 
 FCT: Flux corrected transport
 
-IDP: Invariant-Domain preserving
+%IDP: Invariant-Domain preserving
 
 GPU: Graphics Processing Unit
 
