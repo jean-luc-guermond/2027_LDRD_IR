@@ -1,4 +1,6 @@
-%%%     Package List and Document Class     %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     PACKAGE LIST AND DOCUMENT CLASS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \documentclass[12pt,twoside]{paper}
 \usepackage{graphics}
 \usepackage{graphicx}
@@ -31,7 +33,7 @@
 \renewcommand{\headrulewidth}{0pt}
 \newcommand{\ti}{Robust Nonintrusive Conservative Limiting for Production Codes}
 %\newcommand{\piname}{\textcolor{red}{CUI Page Markings. (DELETE or COMMENT OUT if not applicable.)}}
-\newcommand{\pinamee}{PI Name (Tokareva, Svtelana)}
+\newcommand{\pinamee}{PI Name (Tokareva, Svetlana)}
 \setlength{\headheight}{12pt}
 \pagestyle{fancyplain}
 \fancyhf{}
@@ -44,27 +46,28 @@
 \setcounter{page}{1}
 \setlength{\parindent}{0em}
 \setlength{\parskip}{0em}
-\raggedright
 \raggedbottom
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%%%     Graphics Path     %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     GRAPHICS PATH
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \graphicspath{{./fig/}}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{document}
 
-%%%    Hyperlink Setup     %%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     HYPERLINK SETUP
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypersetup{citecolor=blue,
             linkcolor=blue,
             urlcolor=blue,
             pdftitle=ti}
 %            pdfauthor=\auth}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%    JLG's macros                        %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     JLG'S MACROS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcommand{\ie}{i.e.,\@\xspace}
 \newcommand{\eqq}{{:=}}
@@ -80,14 +83,25 @@
 \newcommand{\calT}{{\mathcal T}}
 \newcommand{\calV}{{\mathcal V}}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%     FEASIBILITY STUDY COVERPAGE     %%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% TODO: remove
+\newcommand{\new}[1]{\textcolor{magenta}{#1}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     REVIEW CRITERIA
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{review_criteria}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     FEASIBILITY STUDY COVERPAGE
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{center}
     \large \textbf{Feasibility Study (FS)}\\
     \vspace{0.5cm}
-    \normalsize \textbf{Robust Nonintrusive Conservative Limiting for Production Codes}\\
+    \normalsize \textbf{Robust Nonintrusive Conservative Limiting for
+      Production Codes}\\
     Tokareva, Svetlana; T5; tokareva@lanl.gov
 \end{center}
 \vspace*{\baselineskip}
@@ -102,322 +116,276 @@
 
 \vspace*{0.5\baselineskip}
 
-Sampling and exploring large parameter spaces using LANL's production
-codes often fails due to robustness issues. Machine learning
-techniques are significantly affected by the robustness issue as they
-require numerous simulations to learn the functional dependence on
-input parameters.  The failure probability is high when the
-models/approximation techniques involve various time/space scales,
-multi-rate time stepping, adaptive multi-resolution, and/or mix
-approximation paradigms. We posit that robustness can be achieved by ensuring that every piece of
-the computational chain maintains physical bounds.
+Sampling large parameter spaces with LANL's production codes often fails
+because of robustness issues. Machine learning techniques are
+particularly affected, as they require numerous simulations to learn the
+functional dependence on input parameters. The failure probability is high
+whenever the models and approximation techniques involve multiple time and space
+scales, multi-rate time stepping, adaptive multi-resolution, or mixed
+approximation paradigms. We posit that robustness can be achieved by
+ensuring that every piece of the computational chain maintains physical bounds.
+
 \vspace*{0.5\baselineskip}
 
-One key tool to maintain physical bounds is limiting, but most known
-limiting techniques are specialized and intrusive.  They mostly
-consist of limiting slopes or fluxes, and are all somewhat based on
-the flux-corrected transport paradigm of
-\cite{Boris_Book_JCP_1973} and
-\cite{Zalesak_1979} by which a “non-admissible” but accurate
-high-order solution is squeezed in the direction of a “good” low-order
-solution until it meets required bounds.  The squeezing idea is
-powerful, but has four major defects: (i) It is intrusive: i.e., it
-requires manipulating slopes and fluxes which is impossible to do in
-LANL's production codes without engaging in costly and error-prone
-restructuring; (ii) It fails when the high-order and low-order
-solutions do not carry the same “generalized” mass; (iii) It cannot be
-applied to modal approximation techniques and reduced-order models;
-(iv) It fails for heterogeneous time/space approximations.
+The key tool for maintaining physical bounds is limiting, but most known
+limiting techniques are specialized and intrusive. They consist of limiting
+slopes or fluxes, and all rest on the flux-corrected transport paradigm of
+\cite{Boris_Book_JCP_1973} and \cite{Zalesak_1979}, in which a
+``non-admissible'' but accurate high-order solution is squeezed toward a
+``good'' low-order solution until it meets the required bounds. The
+squeezing idea is powerful, but it has four major defects: (i) it is
+intrusive, as it requires manipulating slopes and fluxes, which is
+impossible in LANL's production codes without costly and error-prone
+restructuring; (ii) it fails when the high-order and low-order solutions do
+not carry the same “generalized” mass; (iii) it cannot be applied to modal
+approximations or reduced-order models; (iv) it fails for heterogeneous
+time and space approximations.
+
 \vspace*{0.5\baselineskip}
 
-The goal of this FS is to develop generic limiting techniques that are
-not affected by the above problems and that are robust, efficient, HPC
-portable, and potentially easy to implement in LANL's production
-codes.
+The goal of this FS is to develop generic limiting techniques that avoid these
+defects and that are robust, efficient, HPC portable, and straightforward to
+implement in LANL's production codes. \new{The deliverable is a standalone,
+open-source library verified on a LANL prototype production code.}
 
 \vspace*{\baselineskip}
-
-
 
 \textbf{Cover Page Markings:} NA
 
 
-\pagebreak
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     Problem, Hypothesis, Technical Rationale:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagebreak
 \textbf{Problem, Hypothesis \& Technical Rationale:}
 \vspace*{0.5\baselineskip}
 
-\textit{Why:} Accurate quantitative predictions of coupled multiphysics  systems
+\textit{Why:} Accurate quantitative predictions of coupled multiphysics systems
 are at the center of LANL's mission and many innovative applications like
-hypersonic flight, high energy density phenomena, control and
-manipulation of high-speed flows involving complex fluids, mixtures,
-and explosives, possibly interacting with radiation and
-electromagnetic fields. Some of these
-applications have the potential to enable new energy sources by
-forming and controlling plasmas with magnetic confinement (tokamaks and
-stellarators) or inertial confinement (ICF).  But simulating complex multiphysics
-problems involving multiple time and length scales \textbf{still poses}
-robustness challenges both for direct and inverse
-methods.
+hypersonic flight, high energy density phenomena, control and manipulation of
+high-speed flows involving complex fluids, mixtures, and explosives, possibly
+interacting with radiation and electromagnetic fields. Some of these
+applications have the potential to enable new energy sources by forming and
+controlling plasmas with magnetic confinement (tokamaks and stellarators) or
+inertial confinement (ICF). But simulating complex multiphysics problems
+involving multiple time and length scales \textbf{still poses} robustness
+challenges both for direct and inverse methods.
 
 \vspace*{0.5\baselineskip}
 
-\textit{Why now:} Although the machine learning revolution promises to solve some of
-these problems, data sampling is a major bottleneck due to \textbf{lack of
-robustness} for many sample-driven computational approaches such as
-surrogate-based optimization, Bayesian inverse problems, and
-uncertainty quantification.  Machine learning requires running production
-codes many times in order to learn the functional
-dependence with respect to input parameters. But sampling large
-parameter spaces via thousands of automated runs of complex
-multiphysics codes using traditional approximation methods is
-hindered by the fact that a significant number of simulations never
-reach completion due to robustness issues, thereby undermining the
-promises of the machine learning revolution.  There is therefore an
-\textbf{urgent need} for the development of agile, non-intrusive, and provably
-robust numerical methods that can reliably solve multiphysics
-applications using heterogeneous approximation techniques.
+\textit{Why now:} Although the machine learning revolution promises to solve
+some of these problems, data sampling is a major bottleneck due to \textbf{lack
+of robustness} for many sample-driven computational approaches such as
+surrogate-based optimization, Bayesian inverse problems, and uncertainty
+quantification. Machine learning requires running production codes many times in
+order to learn the functional dependence with respect to input parameters. But
+sampling large parameter spaces via thousands of automated runs of complex
+multiphysics codes using traditional approximation methods is hindered by the
+fact that a significant number of simulations never reach completion due to
+robustness issues, thereby undermining the promises of the machine learning
+revolution. There is therefore an \textbf{urgent need} for the development of
+agile, non-intrusive, and provably robust numerical methods that can reliably
+solve multiphysics applications using heterogeneous approximation techniques.
 
 \vspace*{0.5\baselineskip}
 
 \textit{What:} We posit that a key to achieving robustness when leveraging
-heterogeneous approximation techniques is to ensure that every piece
-of the computational chain maintains physical bounds (\ie is
-invariant-domain preserving (IDP)).
-The objective of this FS is to
-address the robustness issue induced by the violation of physical
-bounds in the context of heterogeneous approximation techniques.
-In this FS we will develop generic limiting techniques that are
-robust, efficient, HPC portable, and potentially easy to implement in
+heterogeneous approximation techniques is to ensure that every piece of the
+computational chain maintains physical bounds (\ie is invariant-domain
+preserving (IDP)). The objective of this FS is to address the robustness issue
+induced by the violation of physical bounds in the context of heterogeneous
+approximation techniques. In this FS we will develop generic limiting techniques
+that are robust, efficient, HPC portable, and straightforward to implement in
 LANL's production codes.
 
+\new{The work is organized in two tasks.
+\textbf{T1 (theory):} extend the conservative redistribution framework of
+\cite{Guermond_arxiv_2026} to the vector-valued, nonlinear bounds and the
+heterogeneous approximations encountered in multiphysics applications, and
+establish the conservation and accuracy properties of the resulting
+post-processing step. \textbf{T2 (software):} implement the method as a
+standalone, GPU-portable library that acts on the state array alone, and
+exercise it through this interface on a production multiphysics code.}
+
+\new{Concretely, this FS tests three hypotheses. \textbf{H1
+(non-intrusiveness):} a limiter that reads and writes only the conserved state
+array between steps -- never a flux, a slope, or a stencil -- can enforce
+nonlinear physical bounds in a production code without modifying its transport
+kernels. \textbf{H2 (conservation and accuracy):} local conservative
+redistribution maintains conservation to machine precision and does not degrade
+the formal order of the host discretization. \textbf{H3 (generality and
+cost):} a single post-processing step serves heterogeneous approximations
+(finite volume, high-order and modal, spectral, reduced-order, multi-rate) at a
+small fraction of the cost of a time step and is GPU-portable. The study
+assumes that the host code exposes a per-step hook on the state array and that
+physically meaningful bounds can be specified a priori for the target
+model.}
+
 \vspace*{0.5\baselineskip}
 
-\textit{How:} Enforcing physical bounds is usually done in the
-literature by limiting slopes or fluxes. Most limiting methods consist
-of squeezing some accurate (but fragile) approximation towards a
-robust (but inaccurate) approximation until some physical bounds are
-met. This powerful methodology is unfortunately highly intrusive as it
-needs to access and manipulate fluxes and blend high-order and
-low-order fluxes. The intrusiveness renders this methodology
-inapplicable for LANL's codes. It is also extremely cumbersome when
-deployed on multiphysics problems as the fluxes in this cases may not
-be easily identified, especially when they are estimated in a
-matrix-free fashion, which is now the accepted standard at LANL for
-GPUs accelerated simulations.
+\textit{How:} Enforcing physical bounds is usually done in the literature by
+limiting slopes or fluxes. Most limiting methods consist of squeezing some
+accurate (but fragile) approximation towards a robust (but inaccurate)
+approximation until some physical bounds are met. This powerful methodology is
+unfortunately highly intrusive as it needs to access and manipulate fluxes and
+blend high-order and low-order fluxes. The intrusiveness renders this
+methodology inapplicable for LANL's codes. It is also extremely cumbersome when
+deployed on multiphysics problems as the fluxes in this cases may not be easily
+identified, especially when they are estimated in a matrix-free fashion, which
+is now the accepted standard at LANL for GPUs accelerated simulations.
 %
-The new idea to be deployed in the context of this FS is based on an
-algorithm recently proposed by \cite{Guermond_arxiv_2026} and based on
+The new idea to be deployed in the context of this FS is based on an algorithm
+recently proposed by \cite{Guermond_arxiv_2026} and based on
 \cite[\S2.3]{Kucharik_Shashkov_Wendroff_JCP_2003} and
 \citet{Liu_Cheng_Shu_JSC_2017,Griffin_Shu_RMathSci_2026}. This is a
-post-processing method informed of the physics through some a priori
-reasonable mathematical knowledge of the bounds that are expected.
-The input for the proposed methods is a list of (physically relevant) states,
-and a user-defined concave functional encoding some a priori
-mathematical knowledge on the local bounds that must be enforced. The
-main idea is to locally take from the states that are in bounds and
-give to the states that are out of bounds while maintaining local
-conservation. The idea sounds simple, but the two main difficulties
-that make it non-trivial are that the states and the budgets are
-vector-valued and the bounds are nonlinear. The method has
-already been demonstrated to be efficient and versatile, and it is
-indeed non-intrusive.
+post-processing method informed of the physics through some a priori reasonable
+mathematical knowledge of the bounds that are expected. The input for the
+proposed methods is a list of (physically relevant) states, and a user-defined
+concave functional encoding some a priori mathematical knowledge on the local
+bounds that must be enforced. The main idea is to locally take from the states
+that are in bounds and give to the states that are out of bounds while
+maintaining local conservation. The idea sounds simple, but the two main
+difficulties that make it non-trivial are that the states and the budgets are
+vector-valued and the bounds are nonlinear. The method has already been
+demonstrated to be efficient and versatile, and it is indeed non-intrusive.
+
+\vspace*{0.5\baselineskip}
+
+\new{\textit{Success and outcomes:} The FS succeeds if hypotheses
+{\bfseries H1}--{\bfseries H3} are verified on a production code. The
+{\bfseries deliverables} are an open-source standalone limiting library
+with an interface specification and a publication. A negative result is
+equally actionable: it documents what a production code must expose for
+non-intrusive bound enforcement, and outlines the limit of the proposed
+technology.}
 
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     Mission Impact & Institutional Agility:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
-
-
-
-\textcolor{red}{\textit{(Suggested section length \(\sim \)1
-    page)}}\\ \textcolor{red}{STATE YOUR INNOVATION. COMPARE TO STATE
-  OF THE ART. DEFINE SUCCESS AND DETAIL YOUR OUTCOMES (Intellectual
-  property? Preliminary data for another proposal? Fill a gap?
-  Foundational understanding?)}\\ \textcolor{red}{COMMUNICATE “WHY
-  NOW?”}
-\vspace*{\baselineskip}
-
-\textcolor{red}{Clearly articulate a technically sound concept that defines the problem well, employs appropriate methods or models, and incorporates testable elements aimed at producing early results or reducing key uncertainties.}
-\vspace*{\baselineskip}
-
-\textcolor{red}{Review criteria:}
-\begin{quote}
-\vspace{-0.3cm}
-    \textcolor{red}{\textit{\textbf{Technical Vitality} review criteria weighting 40\%, covering \textbf{Clarity of Problem and Objectives} and \textbf{Innovation and Technical Merit.}}}
-\end{quote}
-
-\begin{itemize}[noitemsep,nolistsep]
-    \item \textcolor{red}{\textit{What \textbf{technical problem or uncertainty} does this feasibility study address?}}
-    \item \textcolor{red}{\textit{Why is resolving this uncertainty important?}}
-    \item \textcolor{red}{\textit{What are the \textbf{specific hypotheses, assumptions, or risks} to be tested or reduced?}}
-    \item \textcolor{red}{\textit{What is the \textbf{technical design} of the study?}}
-    \item \textcolor{red}{\textit{What experiments, models, or analyses will be performed?}}
-    \item \textcolor{red}{\textit{How do these tasks directly test the hypotheses or reduce risk?}}
-    \item \textcolor{red}{\textit{What \textbf{metrics or criteria} will determine whether hypotheses are supported, disproved, or reframed?}}
-    \item \textcolor{red}{\textit{How will the study capture \textbf{useful lessons}, even from negative or inconclusive results?}}
-\end{itemize}
-\vspace*{\baselineskip}
-
+\vspace*{0.5\baselineskip}
 \textbf{Mission Impact \& Institutional Agility:}
-
-\vspace*{0.5\baselineskip}
-
-The present project aligns with the LANL “Computational \& AI Breakthrough” Lab Agenda by
-advancing research in two critical areas: “(1) Algorithmic and Numerical Method Development;
-(2) Software Design and Implementation, focusing on creating high-quality software that
-efficiently supports our developed methods.”
-
-\vspace*{0.5\baselineskip}
-
-Progress in numerical techniques is crucial for enhancing LANL's
-simulation capabilities. The new non-intrusive and
-approximation-agnostic techniques that will be developed in this proposal have the potential to
-unlock the capabilities of existing LANL production codes.
-Enhancing the robustness of forward
-and reduced-order simulations, will dramatically increase the reliability of automated runs over
-large parameter sets, and will help tackle complex multiphysics simulations with greater
-confidence. 
-Specifically, developing robust forward simulations
-that maintain physical states across various multiphysics scenarios will strengthen 
-LANL's ability to leverage more efficiently machine learning and AI tools. 
-
-
 \vspace*{0.5\baselineskip}
 
 
-\textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{1}{2}$ page)}}\\
-\textcolor{red}{Foster cutting edge science, technology, and engineering that ready the Laboratory to respond to current and future mission and national needs.}
-\vspace*{\baselineskip}
+The present project aligns with the LANL “Computational \& AI Breakthrough” Lab
+Agenda by advancing research in two critical areas: “(1) Algorithmic and
+Numerical Method Development; (2) Software Design and Implementation, focusing
+on creating high-quality software that efficiently supports our developed
+methods.”
 
-\textcolor{red}{Review criteria:}\\
-\begin{quote}
-    \vspace{-0.4cm}\textcolor{red}{\textit{\textbf{Mission Agility} review criteria weighting 20\%, covering \textbf{Mission Agility} and \textbf{Mission Institutional Learning.}}}
-\end{quote}
+\vspace*{0.5\baselineskip}
 
-\begin{itemize}[noitemsep,nolistsep]
-    \item \textcolor{red}{\textit{What is the potential \textbf{value of the insights} (positive or negative) for:}}
-    \begin{itemize}[noitemsep,nolistsep]
-        \item \textcolor{red}{\textit{the \textbf{technical community}}}
-        \item \textcolor{red}{\textit{LANL's \textbf{mission space}, and}}
-        \item \textcolor{red}{\textit{\textbf{future projects} that could build on these findings?}}
-    \end{itemize}
-    \item \textcolor{red}{\textit{How will the study contribute to \textbf{institutional learning} (roadmaps, datasets, methods, lessons-learned)?}}
-\end{itemize}
-\vspace*{\baselineskip}
+The new non-intrusive and approximation-agnostic techniques that will be
+developed in this proposal have the potential to unlock the capabilities of
+existing LANL production codes. Enhancing the robustness of forward and
+reduced-order simulations will increase the reliability of automated runs over
+large parameter sets and will help tackle complex multiphysics simulations with
+greater confidence. Specifically, developing robust forward simulations that
+maintain physical states across various multiphysics scenarios will strengthen
+LANL's ability to make efficient use of machine learning and AI tools.
 
+\vspace*{0.5\baselineskip}
+
+\new{The insights are of value well beyond the codes used in this study. Bound
+preservation is currently achieved with intrusive limiters tailored to one
+discretization, so an alternative that acts on the state alone is relevant to
+any code able to expose that state, and the open-source library and the
+publication make both the method and its limits usable by others. The outcome
+also defines the next step: if the paradigm holds, it extends naturally to
+further physics and to adoption by other code teams; if it does not, the study
+says precisely which structural assumption fails and where the effort should go
+instead.}
+%
+\new{The study leaves durable institutional knowledge behind: The interface
+specification records what a production code must expose for physical
+bounds to be enforced from the outside. In addition, the completion rates
+of automated parameter sweeps, measured with and without limiting,
+establish a robustness baseline for future work.}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     Approach, Resources, Path Forward:
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\vspace*{0.5\baselineskip}
 \textbf{Approach, Resources \& Path Forward:}
+\vspace*{0.5\baselineskip}
+
+\textit{How:} To some extent, the proposed methodology will be agnostic to the
+problem and discretization at hand. It will consist of a post-processing
+algorithm that, if needed, will slightly reorganize the inputs in a conservative
+way so that the output satisfies pre-assigned physical bounds. The input will be
+a list of physical states (\ie $\Real^m$-valued state vectors where $m$ is the
+dimension of the state variables) say $(\bsfu_i)_{i\in\calV}$, a user-defined
+quasi-concave (or simply concave) functional $\Psi$ encoding some a priori
+mathematical knowledge on the physical bounds to be enforced, a list of minimum
+bounds say $(\Psi_i^{\min})_{i\in\calV}$ to be enforced. To fully formulate the
+problem we assume to be given a list of local masses $(m_i)_{i\in\calV}$
+(scaling like volumes). With $I\eqq \text{card}(\calV)$, the objective is to
+construct a mapping $\calL : (\Real^m)^I \to (\Real^m)^I$ so that
+$\Psi(\calL(\bsfu)_i)\ge \Psi_m^{\min}$ for all $i\in\calV$. This must be done
+while being conservative, meaning $\sum_{i\in\calV} m_i\calL(\bsfu)_i =
+\sum_{i\in\calV} m_i\bsfu_i$. The principles of the method are described in
+\citep{Guermond_arxiv_2026}.
 
 \vspace*{0.5\baselineskip}
 
-\textit{How:} To some extent, the proposed methodology will be agnostic to
-the problem and discretization at hand. It will consist of a
-post-processing algorithm that, if needed, will slightly reorganize the
-inputs in a conservative way so that the output satisfies pre-assigned
-physical bounds. The input will be a list of physical states (\ie
-$\Real^m$-valued state vectors where $m$ is the dimension of the state
-variables) say $(\bsfu_i)_{i\in\calV}$, a user-defined quasi-concave
-(or simply concave) functional $\Psi$ encoding some a priori
-mathematical knowledge on the physical bounds to be enforced, a
-list of minimum bounds say $(\Psi_i^{\min})_{i\in\calV}$ to be
-enforced. To fully formulate the problem we assume to be given a list
-of local masses $(m_i)_{i\in\calV}$ (scaling like volumes). With
-$I\eqq \text{card}(\calV)$, the objective is to construct a mapping
-$\calL : (\Real^m)^I \to (\Real^m)^I$ so that $\Psi(\calL(\bsfu)_i)\ge
-\Psi_m^{\min}$ for all $i\in\calV$. This must be done while being
-conservative, meaning $\sum_{i\in\calV} m_i\calL(\bsfu)_i =
-\sum_{i\in\calV} m_i\bsfu_i$. The principles of the method are
-described in \citep{Guermond_arxiv_2026}.
-
-\vspace*{0.5\baselineskip}
-
-\textit{Deliverable:} The deliverable will be a standalone software
-written in a modern object-oriented language (C++ or F2023).
+\textit{Deliverable:} The deliverable is a standalone, open-source limiting
+library written in a modern object-oriented language (C++ or F2023).
+\new{It acts on the state array alone and is called once per step, so that a
+host code adopts it without touching its flux and transport routines. It ships
+with the interface specification it requires of the host code, with the test
+problems used to verify conservation, accuracy, and cost, and with a publication
+documenting the theory and the validation results.}
 
 
 \vspace*{0.5\baselineskip}
 
-\textit{Who:} The project will involve the PI (Svetlana Tokareva) and two co-PIs who each hold a Joint
-appointment (JT) with LANL since August 2025 and are  Professor of Mathematics at Texas A\&M
-University (Jean-Luc Guermond and Matthias Maier). Both J.L. Guermond
-and M. Maier are US citizens and have been collaborating with LANL for some time.
-\textcolor{red}{Students?}
+\textit{Who:} The project will involve the PI (Svetlana Tokareva) and two co-PIs
+who each hold a Joint appointment (JT) with LANL since August 2025 and are
+Professor of Mathematics at Texas A\&M University (Jean-Luc Guermond and
+Matthias Maier). Both J.L. Guermond and M. Maier are US citizens and have been
+collaborating with LANL for some time. \textcolor{red}{Students?}
 
 \vspace*{0.5\baselineskip}
 
-\textit{How much:} The budget asked for the execution of the project
-will divided as follows: (1) two one-week visits at Texas A\&M by the
-PI; two one-week visits at LANL by the two co-PIs during Spring 2027
-(travel and accommodation support for two weeks each, making it four
-weeks in total); One long visit during the summer. This will be five
-to six weeks for each co-PI, making it ten to twelve weeks of support
-in total (travel plus accommodation).  The two co-PIs will also have one
-month of salary each supported by the grant.
+\textit{How much:} The budget asked for the execution of the project will
+divided as follows: (1) two one-week visits at Texas A\&M by the PI; two
+one-week visits at LANL by the two co-PIs during Spring 2027 (travel and
+accommodation support for two weeks each, making it four weeks in total); One
+long visit during the summer. This will be five to six weeks for each co-PI,
+making it ten to twelve weeks of support in total (travel plus accommodation).
+The two co-PIs will also have one month of salary each supported by the grant.
 
 \vspace*{0.5\baselineskip}
 
-\textit{When:} The PI and co-PI are going to focus on the theoretical
-aspects of the project in the Fall of 2026 and identify a LANL
-prototype production code that will be used to demonstrate the
-feasibility of the proposed approach. Spring 2027 will be dedicated to
-testing the theoretical ideas from \citep{Guermond_arxiv_2026} and
-demonstrating that the proposed strategy can indeed be
-applied non-intrusively on test-bed codes developed by the PIs. This
-period of tests and verification will likely lead to extensions and adaptations of the
-paradigm.  By the end of Spring 2027, the project will be ready for
-real tests on the predefined LANL prototype production code. Summer 2027 will be
-entirely focused on the project. The three PIs will all meet at Los Alamos and finalize the project.  A publication documenting the
-theoretical aspects and the validation tests for this project will be
-prepared.
+\textit{When:} The PI and co-PI are going to focus on the theoretical aspects of
+the project in the Fall of 2026 and identify a LANL prototype production code
+that will be used to demonstrate the feasibility of the proposed approach.
+Spring 2027 will be dedicated to testing the theoretical ideas from
+\citep{Guermond_arxiv_2026} and demonstrating that the proposed strategy can
+indeed be applied non-intrusively on test-bed codes developed by the PIs. This
+period of tests and verification will likely lead to extensions and adaptations
+of the paradigm. By the end of Spring 2027, the project will be ready for real
+tests on the selected LANL prototype production code. Summer 2027 will be
+entirely focused on the project. The three PIs will all meet at Los Alamos and
+finalize the project. A publication documenting the theoretical aspects and the
+validation tests for this project will be prepared.
 
-\textit{Metric:} Success will be measured by demonstrating that the
-proposed methodology is successful when combined with the predefined
-LANL prototype production code.
+\vspace*{0.5\baselineskip}
+
+\textit{Metric:} Success is measured by verifying the hypotheses
+\new{{\bfseries H1}--{\bfseries H3}} on the selected LANL prototype
+production code.
 
 
 
-\textcolor{red}{\textit{(Suggested section length \(\sim \)$\frac{3}{4}$ page)}}\\
-\textcolor{red}{Articulates a feasibility study that is well conceived, clearly organized, and appropriately scoped, with structure, methods, and milestones designed to produce testable outcomes and generate results that can guide future work.}
-\vspace*{\baselineskip}
-
-\textcolor{red}{Review criteria:}
-\begin{quote}
-\vspace{-0.4cm}
-    \textcolor{red}{\textit{\textbf{Research Approach} review criteria total weight 40\%, covering \textbf{Testability and Risk Reduction, Clarity and Organization} and \textbf{Scope, Readiness, Budget, and Duration.}}}
-\end{quote}
-
-\begin{itemize}[noitemsep,nolistsep]
-    \item \textcolor{red}{\textit{What is the \textbf{plan of work} for the study?}}
-    \item \textcolor{red}{\textit{Key \textbf{{tasks, milestones, or deliverables.}}}}
-    \item \textcolor{red}{\textit{How will your approach provide \textbf{evidence to validate, refine, or reject} the hypothesis?}}
-    \item \textcolor{red}{\textit{What outputs will you produce (data, models, prototypes, analyses)?}}
-    \item \textcolor{red}{\textit{What are the \textbf{success criteria}?}}
-    \item \textcolor{red}{\textit{How will results - positive or negative - inform \textbf{next steps} (scale up, redesign, or close)?}}
-    \item \textcolor{red}{\textit{What are the \textbf{non-technical risks} (facility access, staffing, regulatory, collaboration) and how will you mitigate them?}}
-\end{itemize}
-\vspace*{\baselineskip}
-
-\textcolor{red}{Proposers should provide enough information for reviewers to assess the scope of work, budget and duration – and that the project is in compliance with \textbf{\href{https://ldrd.lanl.gov/q/public/policy?inline=true}{LDRD Rules and Procedures} (pdf)}}
-
-\begin{itemize}[noitemsep,nolistsep]
-    \item \textcolor{red}{\textit{Why are the \textbf{proposed budget} and \textbf{duration} appropriate? (optional bullets: Personnel, Equipment, Materials, Travel)}}
-\end{itemize}
-\vspace*{\baselineskip}
-
-\textcolor{red}{Since the projects are such short time scales, it should be stated that the work can be turned on immediately if funded. If there is a new activity involved that needs approval, if special materials or lab equipment needs to be procured, if HPC accounts are not in place already, etc. this will raise questions for the reviewers on whether the proposed research can be completed in the time frame provided.}
-\vspace*{\baselineskip}
-
-\textcolor{red}{BUDGET RELATED:}\\
-\textcolor{red}{If working with external collaborators, communicate timing, any preferred MOUs and academic partners. MAKE SURE YOU COMPLY WITH \textbf{\href{https://ldrd.lanl.gov/q/public/policy?inline=true}{LDRD Rules and Procedures} (pdf)}}\\
-\textcolor{red}{FUNDING LIMITS AND PURCHASE DEADLINES.}
-\begin{itemize}[noitemsep,nolistsep]
-    \item \textcolor{red}{\textbf{Collaborators: External Collaborations are permitted.} No more than 25\% of the project budget may be spent at a collaborator institution \textbf{(7.3.5 Budget Share for Collaborators).}}
-    \item \textcolor{red}{\textbf{Purchases:}}
-    \begin{itemize}[noitemsep,nolistsep]
-        \item \textcolor{red}{M\&S costs must not exceed 25\% of the project’s total budget \textbf{(7.3.2 Materials and Services (M\&S))}}
-        \item \textcolor{red}{All single items \> \$5k must be received at least three-months before the project ends. \textbf{(7.4.2 Purchasing Limitations for Final-year Projects)}}
-    \end{itemize}
-\end{itemize}
 
 \begin{center}
 \textit{end of page limited section}
@@ -425,7 +393,14 @@ LANL prototype production code.
 \vspace{-0.7cm}
 \noindent\makebox[\linewidth]{\rule{\paperwidth}{0.4pt}}
 
-%%%%%%%%%%%%%%%%% APPENDICES  %%%%%%%%%%%%%%%%%%
+
+\clearpage % remove
+\newpage   % remove
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     APPENDICES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \vspace*{\baselineskip}
 
 \textbf{Appendix:} NA
@@ -434,7 +409,8 @@ LANL prototype production code.
 
 \textbf{AI Disclosure statement:} NA
 %\textcolor{red}{\textbf{Substantive contributions by AI must be disclosed.} \\
-%\textcolor{red}{See \underline{CEA's} "Minimal Use vs. Substantive Use” and "Disclosure Library" resources.}}
+% \textcolor{red}{See \underline{CEA's} "Minimal Use vs. Substantive Use” and
+% "Disclosure Library" resources.}}
 \vspace*{\baselineskip}
 
 \textbf{Glossary of Acronyms:}
@@ -449,28 +425,43 @@ JT: Joint appointment
 
 ICF: Inertial confinement fusion
 
-%\textcolor{red}{\textbf{Include a list of acronyms (with definitions) used in the proposal.}}
+% \textcolor{red}{\textbf{Include a list of acronyms (with definitions) used in
+% the proposal.}}
 \vspace*{\baselineskip}
 
-%%%%%%%%%%%%%%%%% REFERENCES  %%%%%%%%%%%%%%%%%%
-% If submitting a Concept Disruptor, copy this section starting from \renewcommand and ending in \vspace*{\baselineskip} and paste it into your Concept Disruptor template where indicated (look for commented-out References section. 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     REFERENCES
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% If submitting a Concept Disruptor, copy this section starting from
+% \renewcommand and ending in \vspace*{\baselineskip} and paste it into your
+% Concept Disruptor template where indicated (look for commented-out References
+% section.
 
 %\renewcommand{\bibpreamble}{[1.] This is an example reference. NOTE: If you are a LaTeX user, the list should automatically populate when you type ``$\backslash$cite$\{$insert name of .bib reference$\}$" within the BODY of your proposal.}
 \bibliographystyle{abbrvnat}
 \bibliography{LDRD_IR_JLG_MM_ST}
 
-%\textcolor{red}{\textit{(\textbf{Optional.} While not page limited, strongly recommend to not exceed 1 page)}}
+% \textcolor{red}{\textit{(\textbf{Optional.} While not page limited, strongly
+% recommend to not exceed 1 page)}}
 %\vspace*{\baselineskip}
 
-%\textcolor{red}{This page is for references only. DO NOT include comments, notes, etc.  References should not contain images/figures.  Additional content included in the references that are deemed to be proposal-like (e.g. language such as but not limited to “we,” “this proposal,” “our competition”) may provide a substantive advantage and will result in the rejection of the proposal without technical review. Again, be judicious in your citation selection.}
+% \textcolor{red}{This page is for references only. DO NOT include comments,
+% notes, etc. References should not contain images/figures. Additional content
+% included in the references that are deemed to be proposal-like (e.g. language
+% such as but not limited to “we,” “this proposal,” “our competition”) may
+% provide a substantive advantage and will result in the rejection of the
+% proposal without technical review. Again, be judicious in your citation
+% selection.}
 %\vspace*{\baselineskip}
 
-%\textcolor{red}{Do not include any letters of reference or recommendation in your proposal. They will be discarded without consideration.}
+% \textcolor{red}{Do not include any letters of reference or recommendation in
+% your proposal. They will be discarded without consideration.}
 %\vspace*{\baselineskip}
 
 \newpage
 
 
-%%%%%%%%%%%%% END OF DOCUMENT %%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%     END OF DOCUMENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \end{document}
