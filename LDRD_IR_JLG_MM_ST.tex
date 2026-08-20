@@ -13,8 +13,9 @@
 \usepackage[colorlinks,breaklinks]{hyperref}
 \usepackage{hyperref}
 \usepackage{color}
-\usepackage[numbers,sort&compress]{natbib}
-\let\cite=\citet
+\usepackage{cite}
+% \usepackage[numbers,sort&compress]{natbib}
+%\let\cite=\citet
 %\usepackage{hypernat}
 \usepackage{subfig}
 \usepackage{pslatex}
@@ -28,12 +29,13 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amssymb}
 \usepackage{bbm}
+\usepackage[normalem]{ulem}
 
 
 \renewcommand{\headrulewidth}{0pt}
 \newcommand{\ti}{Robust Nonintrusive Conservative Limiting for Production Codes}
 %\newcommand{\piname}{\textcolor{red}{CUI Page Markings. (DELETE or COMMENT OUT if not applicable.)}}
-\newcommand{\pinamee}{PI Name (Tokareva, Svetlana)}
+\newcommand{\pinamee}{Tokareva, Svetlana}
 \setlength{\headheight}{12pt}
 \pagestyle{fancyplain}
 \fancyhf{}
@@ -85,6 +87,7 @@
 
 % TODO: remove
 \newcommand{\new}[1]{\textcolor{magenta}{#1}}
+\newcommand{\ST}[1]{\textcolor{blue}{#1}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -102,7 +105,7 @@
     \vspace{0.5cm}
     \normalsize \textbf{Robust Nonintrusive Conservative Limiting for
       Production Codes}\\
-    Tokareva, Svetlana; T5; tokareva@lanl.gov
+    \textbf{\textit{PI}}: Tokareva, Svetlana; T5; tokareva@lanl.gov
 \end{center}
 \vspace*{\baselineskip}
 
@@ -116,41 +119,17 @@
 
 \vspace*{0.5\baselineskip}
 
-Sampling large parameter spaces with LANL's production codes often fails
-because of robustness issues. Machine learning techniques are
-particularly affected, as they require numerous simulations to learn the
-functional dependence on input parameters. The failure probability is high
-whenever the models and approximation techniques involve multiple time and space
-scales, multi-rate time stepping, adaptive multi-resolution, or mixed
-approximation paradigms. We posit that robustness can be achieved by
-ensuring that every piece of the computational chain maintains physical bounds.
+\ST{Sampling large parameter spaces with multiphysics codes is necessary e.g., for V&V studies, but might fail because of robustness issues. Machine learning techniques are particularly affected, as they require numerous simulations to learn the functional dependence on input parameters. The failure probability is high whenever the models and methods involve multiple time and space scales, adaptive multi-resolution, or mixed approximation paradigms. We posit that robustness can be achieved by ensuring that every piece of the computational chain maintains physical bounds.}
 
 \vspace*{0.5\baselineskip}
 
-The key tool for maintaining physical bounds is limiting, but most known
-limiting techniques are specialized and intrusive. They consist of limiting
-slopes or fluxes, and all rest on the flux-corrected transport paradigm of
-\cite{Boris_Book_JCP_1973} and \cite{Zalesak_1979}, in which a
-``non-admissible'' but accurate high-order solution is squeezed toward a
-``good'' low-order solution until it meets the required bounds. The
-squeezing idea is powerful, but it has four major defects: (i) it is
-intrusive, as it requires manipulating slopes and fluxes, which is
-impossible in LANL's production codes without costly and error-prone
-restructuring; (ii) it fails when the high-order and low-order solutions do
-not carry the same “generalized” mass; (iii) it cannot be applied to modal
-approximations or reduced-order models; (iv) it fails for heterogeneous
-time and space approximations.
+\ST{Limiting is the common tool for maintaining physical bounds in simulations. Unfortunately, most known limiting are specialized and intrusive: they require adjusting slopes or fluxes, and all rest on the flux-corrected transport paradigm of \cite{Boris_Book_JCP_1973, Zalesak_1979}, in which a “non-admissible” but accurate high-order solution is squeezed toward a “good” low-order solution until it meets the required bounds. The squeezing idea is powerful, but it has four major defects: (i) it is intrusive, as it requires manipulating slopes and fluxes, which is impossible in LANL’s production codes without costly and error-prone refactoring; (ii) it fails when the high-order and low-order solutions do not carry the same “generalized” mass; (iii) it cannot be applied to reduced-order models; (iv) it fails for heterogeneous time and space approximations.}
 
 \vspace*{0.5\baselineskip}
 
-The goal of this FS is to develop generic limiting techniques that avoid these
-defects and that are robust, efficient, HPC portable, and straightforward to
-implement in LANL's production codes. \new{The deliverable is a standalone,
-open-source library verified on a LANL prototype production code.}
+\ST{The goal of this FS is to develop generic limiting techniques that avoid these defects and that are robust, efficient, HPC portable, and straightforward to implement in LANL’s production codes. The deliverable is a standalone, open-source library verified on a LANL prototype production code.}
 
 \vspace*{\baselineskip}
-
-\textbf{Cover Page Markings:} NA
 
 
 
@@ -162,29 +141,28 @@ open-source library verified on a LANL prototype production code.}
 \textbf{Problem, Hypothesis \& Technical Rationale:}
 \vspace*{0.5\baselineskip}
 
-\textit{Why:} Accurate quantitative predictions of coupled multiphysics systems
-are at the center of LANL's mission and many innovative applications like
-hypersonic flight, high energy density phenomena, control and manipulation of
-high-speed flows involving complex fluids, mixtures, and explosives, possibly
-interacting with radiation and electromagnetic fields. Some of these
+\textit{Why:} \ST{Accurate quantitative predictions of coupled multiphysics systems
+are at the center of LANL's mission, e.g. in applications like high energy density physics, control and manipulation of
+high-speed flows of complex fluids, mixtures, and explosives, possibly
+interacting with radiation and electromagnetic fields.} Some of these
 applications have the potential to enable new energy sources by forming and
 controlling plasmas with magnetic confinement (tokamaks and stellarators) or
-inertial confinement (ICF). But simulating complex multiphysics problems
+inertial confinement (ICF). However, simulating complex multiphysics problems
 involving multiple time and length scales \textbf{still poses} robustness
 challenges both for direct and inverse methods.
 
 \vspace*{0.5\baselineskip}
 
-\textit{Why now:} Although the machine learning revolution promises to solve
+\textit{Why now:} Although the ML revolution promises to solve
 some of these problems, data sampling is a major bottleneck due to \textbf{lack
 of robustness} for many sample-driven computational approaches such as
 surrogate-based optimization, Bayesian inverse problems, and uncertainty
-quantification. Machine learning requires running production codes many times in
+quantification. ML requires running production codes many times in
 order to learn the functional dependence with respect to input parameters. But
 sampling large parameter spaces via thousands of automated runs of complex
 multiphysics codes using traditional approximation methods is hindered by the
-fact that a significant number of simulations never reach completion due to
-robustness issues, thereby undermining the promises of the machine learning
+fact that a \textbf{significant number of simulations never reach completion due to
+robustness issues}, thereby undermining the promises of the machine learning
 revolution. There is therefore an \textbf{urgent need} for the development of
 agile, non-intrusive, and provably robust numerical methods that can reliably
 solve multiphysics applications using heterogeneous approximation techniques.
@@ -227,19 +205,19 @@ model.}
 
 \textit{How:} Enforcing physical bounds is usually done in the literature by
 limiting slopes or fluxes. Most limiting methods consist of squeezing some
-accurate (but fragile) approximation towards a robust (but inaccurate)
+accurate (but fragile) approximation towards a robust (but \ST{less accurate})
 approximation until some physical bounds are met. This powerful methodology is
 unfortunately highly intrusive as it needs to access and manipulate fluxes and
 blend high-order and low-order fluxes. The intrusiveness renders this
-methodology inapplicable for LANL's codes. It is also extremely cumbersome when
+methodology inapplicable for \ST{LANL's complex multiphysics} codes. It is also extremely cumbersome when
 deployed on multiphysics problems as the fluxes in this cases may not be easily
-identified, especially when they are estimated in a matrix-free fashion, which
-is now the accepted standard at LANL for GPUs accelerated simulations.
+identified. \ST{\sout{(,especially when they are estimated in a matrix-free fashion, which
+is now the accepted standard at LANL for GPUs accelerated simulations.}}
 %
 The new idea to be deployed in the context of this FS is based on an algorithm
 recently proposed by \cite{Guermond_arxiv_2026} and based on
 \cite[\S2.3]{Kucharik_Shashkov_Wendroff_JCP_2003} and
-\citet{Liu_Cheng_Shu_JSC_2017,Griffin_Shu_RMathSci_2026}. This is a
+\cite{Liu_Cheng_Shu_JSC_2017,Griffin_Shu_RMathSci_2026}. This is a
 post-processing method informed of the physics through some a priori reasonable
 mathematical knowledge of the bounds that are expected. The input for the
 proposed methods is a list of (physically relevant) states, and a user-defined
@@ -317,8 +295,8 @@ establish a robustness baseline for future work.}
 \textbf{Approach, Resources \& Path Forward:}
 \vspace*{0.5\baselineskip}
 
-\textit{How:} To some extent, the proposed methodology will be agnostic to the
-problem and discretization at hand. It will consist of a post-processing
+\textit{How:} \ST{The proposed methodology will be largely agnostic to the
+problem and discretization at hand.} It will consist of a post-processing
 algorithm that, if needed, will slightly reorganize the inputs in a conservative
 way so that the output satisfies pre-assigned physical bounds. The input will be
 a list of physical states (\ie $\Real^m$-valued state vectors where $m$ is the
@@ -327,18 +305,18 @@ quasi-concave (or simply concave) functional $\Psi$ encoding some a priori
 mathematical knowledge on the physical bounds to be enforced, a list of minimum
 bounds say $(\Psi_i^{\min})_{i\in\calV}$ to be enforced. To fully formulate the
 problem we assume to be given a list of local masses $(m_i)_{i\in\calV}$
-(scaling like volumes). With $I\eqq \text{card}(\calV)$, the objective is to
+(scaling like volumes). \ST{With $I\eqq \text{card}(\calV)$, the objective is to
 construct a mapping $\calL : (\Real^m)^I \to (\Real^m)^I$ so that
-$\Psi(\calL(\bsfu)_i)\ge \Psi_m^{\min}$ for all $i\in\calV$. This must be done
+$\Psi(\calL(\bsfu)_i)\ge \Psi_m^{\min}$ for all $i\in\calV$. -- is there a way to simplify this statement? it's already "too much math"}. This must be done
 while being conservative, meaning $\sum_{i\in\calV} m_i\calL(\bsfu)_i =
-\sum_{i\in\calV} m_i\bsfu_i$. The principles of the method are described in
-\citep{Guermond_arxiv_2026}.
+\sum_{i\in\calV} m_i\bsfu_i$. The principles of the method as well as preliminary results are available in
+\cite{Guermond_arxiv_2026}.
 
 \vspace*{0.5\baselineskip}
 
 \textit{Deliverable:} The deliverable is a standalone, open-source limiting
 library written in a modern object-oriented language (C++ or F2023).
-\new{It acts on the state array alone and is called once per step, so that a
+\new{It acts on the state array alone and is called once per \ST{time} step, so that a
 host code adopts it without touching its flux and transport routines. It ships
 with the interface specification it requires of the host code, with the test
 problems used to verify conservation, accuracy, and cost, and with a publication
@@ -348,41 +326,44 @@ documenting the theory and the validation results.}
 \vspace*{0.5\baselineskip}
 
 \textit{Who:} The project will involve the PI (Svetlana Tokareva) and two co-PIs
-who each hold a Joint appointment (JT) with LANL since August 2025 and are
-Professor of Mathematics at Texas A\&M University (Jean-Luc Guermond and
+who each hold a Joint Appointment with LANL since August 2025 and are
+Professors of Mathematics at Texas A\&M University (Jean-Luc Guermond and
 Matthias Maier). Both J.L. Guermond and M. Maier are US citizens and have been
 collaborating with LANL for some time. \textcolor{red}{Students?}
 
 \vspace*{0.5\baselineskip}
 
 \textit{How much:} The budget asked for the execution of the project will
-divided as follows: (1) two one-week visits at Texas A\&M by the PI; two
+be used as follows: (1) two one-week visits at Texas A\&M by the PI; two
 one-week visits at LANL by the two co-PIs during Spring 2027 (travel and
-accommodation support for two weeks each, making it four weeks in total); One
-long visit during the summer. This will be five to six weeks for each co-PI,
+accommodation support for two weeks each, making it four weeks in total); (2) one
+extended stay at LANL during the summer (five to six weeks) for each co-PI,
 making it ten to twelve weeks of support in total (travel plus accommodation).
-The two co-PIs will also have one month of salary each supported by the grant.
+The two co-PIs will also have one month of TAMU salary each supported by the grant.
+(3) The PI will be supported at 0.2 FTE.
 
 \vspace*{0.5\baselineskip}
 
-\textit{When:} The PI and co-PI are going to focus on the theoretical aspects of
-the project in the Fall of 2026 and identify a LANL prototype production code
-that will be used to demonstrate the feasibility of the proposed approach.
+\textit{When:} The PI and co-PIs are going to focus on the theoretical aspects of
+the project in the Fall of 2026 and identify the most appropriate LANL prototype production code
+that will be used to demonstrate the feasibility of the proposed approach. \ST{Candidates are: FLAG, xRAGE, Quinoa, Fierro}.
 Spring 2027 will be dedicated to testing the theoretical ideas from
-\citep{Guermond_arxiv_2026} and demonstrating that the proposed strategy can
+\cite{Guermond_arxiv_2026} and demonstrating that the proposed strategy can
 indeed be applied non-intrusively on test-bed codes developed by the PIs. This
 period of tests and verification will likely lead to extensions and adaptations
 of the paradigm. By the end of Spring 2027, the project will be ready for real
-tests on the selected LANL prototype production code. Summer 2027 will be
-entirely focused on the project. The three PIs will all meet at Los Alamos and
-finalize the project. A publication documenting the theoretical aspects and the
-validation tests for this project will be prepared.
+tests on the selected LANL prototype production code. \ST{The team will
+finalize the project in the Summer 2027 and prepare a publication documenting the theoretical aspects and
+validation tests.}
 
 \vspace*{0.5\baselineskip}
 
 \textit{Metric:} Success is measured by verifying the hypotheses
 \new{{\bfseries H1}--{\bfseries H3}} on the selected LANL prototype
 production code.
+
+\ST{Risks: Something on Testability and Risk
+Reduction?}
 
 
 
@@ -415,13 +396,15 @@ production code.
 
 \textbf{Glossary of Acronyms:}
 
+V\&V: Verifiation and Validation
+
+ML: Machine Learning
+
 FCT: Flux corrected transport
 
 IDP: Invariant-Domain preserving
 
 GPU: Graphics Processing Unit
-
-JT: Joint appointment
 
 ICF: Inertial confinement fusion
 
@@ -438,7 +421,7 @@ ICF: Inertial confinement fusion
 % section.
 
 %\renewcommand{\bibpreamble}{[1.] This is an example reference. NOTE: If you are a LaTeX user, the list should automatically populate when you type ``$\backslash$cite$\{$insert name of .bib reference$\}$" within the BODY of your proposal.}
-\bibliographystyle{abbrvnat}
+\bibliographystyle{plain}
 \bibliography{LDRD_IR_JLG_MM_ST}
 
 % \textcolor{red}{\textit{(\textbf{Optional.} While not page limited, strongly
