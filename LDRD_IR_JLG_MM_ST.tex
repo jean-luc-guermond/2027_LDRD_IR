@@ -252,7 +252,7 @@ and is GPU-portable.
 
 \vspace*{0.5\baselineskip}
 
-Technical Design: The work is organized in two tasks. \textbf{T1 (theory):}
+\textit{Technical Design:} The work is organized in two tasks. \textbf{T1 (theory):}
 extend the conservative redistribution framework of
 \cite{Guermond_arxiv_2026} to the vector-valued, nonlinear bounds and the
 heterogeneous approximations encountered in multiphysics applications, and
@@ -332,12 +332,21 @@ functional $\Psi$ encoding some a priori mathematical knowledge on the
 physical bounds to be enforced, a list of minimum bounds say
 $(\Psi_i^{\min})_{i\in\calV}$ to be enforced. To fully formulate the
 problem we assume to be given a list of local masses $(m_i)_{i\in\calV}$
-(scaling like volumes). \ST{With $I\eqq \text{card}(\calV)$, the objective
-is to construct a mapping $\calL : (\Real^m)^I \to (\Real^m)^I$ so that
-$\Psi(\calL(\bsfu)_i)\ge \Psi_m^{\min}$ for all $i\in\calV$. -- is there a
-way to simplify this statement? it's already "too much math"}. This must be
-done while being conservative, meaning $\sum_{i\in\calV} m_i\calL(\bsfu)_i
-= \sum_{i\in\calV} m_i\bsfu_i$. The principles of the method as well as
+(scaling like volumes).
+%\ST{With $I\eqq \text{card}(\calV)$, the objective
+%is to construct a mapping $\calL : (\Real^m)^I \to (\Real^m)^I$ so that
+%$\Psi(\calL(\bsfu)_i)\ge \Psi_m^{\min}$ for all $i\in\calV$. -- is there a
+%way to simplify this statement? it's already "too much math"}.
+The objective
+is to construct a limiting mapping $\calL $ satisfying the conservation property
+$\sum_{i\in\calV} m_i\calL(\bsfu)_i
+= \sum_{i\in\calV} m_i\bsfu_i$ and so that
+$\Psi(\calL(\bsfu)_i)\ge \Psi_i^{\min}$ for all $i\in\calV$. 
+%This must be
+%the objective
+%is to construct a mapping $\calL : (\Real^m)^I \to (\Real^m)^I$ so that
+%$\Psi(\calL(\bsfu)_i)\ge \Psi_m^{\min}$ for all $i\in\calV$.done while being conservative, meaning
+The principles of the method as well as
 preliminary results are available in \cite{Guermond_arxiv_2026}.
 
 \vspace*{0.5\baselineskip}
