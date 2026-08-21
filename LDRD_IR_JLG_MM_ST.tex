@@ -117,7 +117,7 @@
 \textbf{Funding level (\$K):} \$150K.
 \vspace*{\baselineskip}
 
-\textbf{Project Description:} \textcolor{red}{250 words}
+\textbf{Project Description:} 
 
 \vspace*{0.5\baselineskip}
 
@@ -222,19 +222,17 @@ recently proposed in \cite{Guermond_arxiv_2026} and based on
 \cite{Liu_Cheng_Shu_JSC_2017,Griffin_Shu_RMathSci_2026}. This is a
 post-processing method informed of the physics through some a priori reasonable
 mathematical knowledge of expected bounds. The input for the
-proposed methods is a list of (physically relevant) states, and a user-defined
-concave functional encoding some a priori mathematical knowledge on the local
-bounds that must be enforced. The main idea is to locally take from the states
-that are in bounds and give to the states that are out of bounds while
-maintaining local conservation. The idea sounds simple, but the two main
-difficulties that make it non-trivial are that the states and the budgets are
-vector-valued and the bounds are nonlinear. This non-intrusive method has already been
-demonstrated to be efficient and versatile.
+proposed methods is a list of (physically relevant) states \new{and some
+connectivity information}, and a user-defined concave functional encoding
+some a priori mathematical knowledge on the local bounds that must be
+enforced. The main idea is to locally take from the states that are in
+bounds and give to the states that are out of bounds while maintaining
+local conservation. The idea sounds simple, but the two main difficulties
+that make it non-trivial are that the states and the budgets are
+vector-valued and the bounds are nonlinear. This non-intrusive method has
+already been demonstrated to be efficient and versatile.
 
 \vspace*{0.5\baselineskip}
-
-\jlg{(JLG) to MM and ST: The limiter needs to have access to some
-  connectivity array to be able to redistribute. I think this too technical to explain.} \ST{I agree, too technical.}
 
 \textit{Assumptions: } This FS tests three hypotheses. \textbf{H1
 (non-intrusiveness):} a limiter that reads and writes only the conserved
